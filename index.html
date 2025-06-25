@@ -118,17 +118,17 @@
         
         /* === PRINT STYLES === */
         @media print {
+            body {
+                -webkit-print-color-adjust: exact; /* Ensures colors are printed */
+                print-color-adjust: exact;
+            }
             body > *:not(#cv-preview-container) {
                 display: none;
             }
-            body {
-                margin: 0;
-                background: none;
-            }
             #cv-preview-container {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
                 font-size: 7pt !important; /* Font size reduced for export */
                 min-height: 0;
             }
@@ -147,7 +147,6 @@
                 page-break-inside: avoid;
             }
         }
-
     </style>
 </head>
 <body class="bg-gray-100">
@@ -404,3 +403,4 @@
     </script>
 </body>
 </html>
+
