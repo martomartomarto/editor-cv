@@ -54,6 +54,37 @@
         h2.section-title {
             color: #1e40af; /* blue-800 */
         }
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            position: absolute;
+            top: 6px;
+            right: 6px;
+        }
+        .control-btn {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .control-btn:hover {
+            background-color: #e5e7eb;
+        }
+        .control-btn.delete-btn {
+            color: #ef4444;
+        }
+         .control-btn.move-btn {
+            color: #3b82f6;
+        }
+
     </style>
 </head>
 <body class="bg-gray-100">
@@ -61,7 +92,7 @@
     <div class="container mx-auto p-4 lg:p-8">
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800">Editor de Currículum Interactivo</h1>
-            <p class="text-gray-600 mt-2">Completa los campos y descarga tu CV profesional en PDF al instante.</p>
+            <p class="text-gray-600 mt-2">Completa, organiza y descarga tu CV profesional al instante.</p>
         </header>
 
         <div class="fixed top-4 right-4 z-50">
@@ -178,6 +209,35 @@
             ];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
+            // --- Funciones de control de items (accesibles globalmente) ---
+            window.deleteItem = function(itemId) {
+                document.getElementById(`form-${itemId}`).remove();
+                document.getElementById(`preview-${itemId}`).remove();
+                saveData();
+            }
+
+            window.moveItemUp = function(itemId) {
+                const formItem = document.getElementById(`form-${itemId}`);
+                const previewItem = document.getElementById(`preview-${itemId}`);
+                
+                if (formItem && formItem.previousElementSibling) {
+                    formItem.parentNode.insertBefore(formItem, formItem.previousElementSibling);
+                    previewItem.parentNode.insertBefore(previewItem, previewItem.previousElementSibling);
+                    saveData();
+                }
+            }
+
+            window.moveItemDown = function(itemId) {
+                const formItem = document.getElementById(`form-${itemId}`);
+                const previewItem = document.getElementById(`preview-${itemId}`);
+
+                if (formItem && formItem.nextElementSibling) {
+                    formItem.parentNode.insertBefore(formItem.nextElementSibling, formItem);
+                    previewItem.parentNode.insertBefore(previewItem.nextElementSibling, previewItem);
+                    saveData();
+                }
+            }
+
             function loadData() {
                 fields.forEach(id => {
                     const input = document.getElementById(id);
@@ -189,13 +249,16 @@
                 });
                 lists.forEach(listName => {
                     const savedList = JSON.parse(localStorage.getItem(`${listName}List`));
-                    if (savedList) {
+                    if (savedList && savedList.length > 0) {
                         savedList.forEach(itemData => addToList(listName, itemData));
+                    } else if (!localStorage.getItem('dataLoaded')) {
+                         // Evita recargar datos de ejemplo si el usuario borró todo
                     }
                 });
-                 // Cargar datos de ejemplo si el localStorage está vacío
-                if (!localStorage.getItem('nombre')) {
+                
+                if (!localStorage.getItem('dataLoaded')) {
                     loadSampleData();
+                    localStorage.setItem('dataLoaded', 'true');
                 }
             }
 
@@ -231,34 +294,42 @@
             function addToList(listName, data = {}) {
                 const listContainer = document.getElementById(`${listName}-list`);
                 const previewListContainer = document.getElementById(`preview-${listName}-list`);
-                const itemId = `${listName}-${Date.now()}`;
+                const itemId = `${listName}-${Date.now()}-${Math.random()}`;
 
                 const formDiv = document.createElement('div');
-                formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative';
+                formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
                 formDiv.id = `form-${itemId}`;
                 
-                let formHTML = `<button onclick="this.parentElement.remove(); document.getElementById('preview-${itemId}').remove(); saveData();" class="absolute top-1 right-2 text-red-500 hover:text-red-700 font-bold">&times;</button>`;
-
+                let formContent = '';
                 if (listName === 'experiencia') {
-                    formHTML += `
+                    formContent = `
                         <input type="text" data-key="puesto" placeholder="Puesto" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}">
                         <input type="text" data-key="empresa" placeholder="Empresa y Lugar" class="w-full p-1 mb-2 border rounded-md" value="${data.empresa || ''}">
                         <input type="text" data-key="fecha" placeholder="Fecha (e.g., Abr 2023 - Abr 2025)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}">
                         <textarea data-key="descripcion" placeholder="Descripción de tareas y logros (un logro por línea)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>
                     `;
                 } else if (listName === 'educacion') {
-                    formHTML += `
+                    formContent = `
                         <input type="text" data-key="titulo" placeholder="Título Obtenido" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}">
                         <input type="text" data-key="institucion" placeholder="Institución y Lugar" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}">
                         <input type="text" data-key="fecha" placeholder="Fecha (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">
                     `;
                 } else if (listName === 'habilidades') {
-                    formHTML += `
+                    formContent = `
                          <input type="text" data-key="categoria" placeholder="Categoría (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}">
                          <textarea data-key="lista" placeholder="Habilidades (separadas por coma)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>
                     `;
                 }
-                formDiv.innerHTML = formHTML;
+                
+                const controls = `
+                    <div class="item-controls">
+                        <button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Mover hacia arriba">&uarr;</button>
+                        <button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Mover hacia abajo">&darr;</button>
+                        <button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Eliminar">&times;</button>
+                    </div>
+                `;
+
+                formDiv.innerHTML = formContent + controls;
                 listContainer.appendChild(formDiv);
                 
                 const previewDiv = document.createElement('div');
@@ -275,7 +346,7 @@
                 formDiv.querySelectorAll('input, textarea').forEach(input => {
                     input.addEventListener('input', updateFunction);
                 });
-                updateFunction(); // Initial call
+                updateFunction();
             }
             
             function updateListPreview(listName, previewDiv, data) {
@@ -316,43 +387,22 @@
 
             document.getElementById('download-pdf').addEventListener('click', () => {
                 const cvPreview = document.getElementById('cv-preview-container');
-                const deleteButtons = document.querySelectorAll('.item-form button');
-
-                // Ocultar botones de eliminar para la captura
-                deleteButtons.forEach(btn => btn.style.display = 'none');
+                const controls = document.querySelectorAll('.item-controls');
+                controls.forEach(c => c.style.display = 'none');
                 
                 html2canvas(cvPreview, {
-                    scale: 2, // Aumenta la resolución para mejor calidad
-                    useCORS: true,
-                    logging: false // Desactivar logs en consola para limpieza
+                    scale: 2, useCORS: true, logging: false
                 }).then(canvas => {
                     const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF({
-                        orientation: 'portrait',
-                        unit: 'mm',
-                        format: 'a4'
-                    });
-
+                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
                     const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = pdf.internal.pageSize.getHeight();
-                    const canvasWidth = canvas.width;
-                    const canvasHeight = canvas.height;
-                    const canvasAspectRatio = canvasWidth / canvasHeight;
-
-                    // Calcular la altura del PDF manteniendo la proporción del canvas
-                    const finalPdfHeight = pdfWidth / canvasAspectRatio;
-
-                    // Añadir la imagen al PDF
+                    const finalPdfHeight = pdfWidth / (canvas.width / canvas.height);
                     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, finalPdfHeight);
                     pdf.save("cv-profesional.pdf");
-
-                    // Volver a mostrar los botones
-                    deleteButtons.forEach(btn => btn.style.display = '');
-
+                    controls.forEach(c => c.style.display = 'flex');
                 }).catch(err => {
                     console.error("Error al generar el PDF:", err);
-                    // Asegurarse de volver a mostrar los botones si hay un error
-                    deleteButtons.forEach(btn => btn.style.display = '');
+                    controls.forEach(c => c.style.display = 'flex');
                 });
             });
 
@@ -367,17 +417,23 @@
                     nacionalidad: 'Argentinean, Italian',
                     perfil: `Resultsdriven -Growth & Business Intelligence Specialist with a strong background in data analytics, digital marketing, and automation. Proven ability to leverage SQL, Tableau, Amazon Redshift, and A/B testing to drive growth, optimize user journeys, and enhance data-driven decision-making. Passionate about bridging the gap between marketing strategy and business intelligence to scale operations and maximize impact. Experienced in designing high-impact dashboards, automation scripts, and customer engagement strategies to improve performance and efficiency.`,
                     experienciaList: [
-                        { puesto: 'Growth Lead', empresa: 'Ontop', fecha: 'Abr 2025 - Presente', descripcion: 'Lead the overall growth strategy, integrating paid media, organic, and referral channels to drive customer acquisition and revenue.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze) focused on activation, retention, and reducing churn.\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities across the funnel.' },
-                        { puesto: 'Growth & BI Specialist', empresa: 'Ontop, Buenos Aires', fecha: 'Abr 2023 - Abr 2025', descripcion: 'Increased conversion rates by 10% through A/B testing and experimentation on landing pages and onboarding flows.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies and refining CRM automations.\nDeveloped predictive cohort analysis that reduced churn by 15%, identifying key drop-off points and implemented targeted retention efforts.' }
+                        { puesto: 'Growth Lead', empresa: 'Ontop', fecha: 'Abr 2025 - Presente', descripcion: 'Lead the overall growth strategy, integrating paid media, organic, and referral channels to drive customer acquisition and revenue.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze) focused on activation, retention, and reducing churn.\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities across the funnel.\nCollaborate cross-functionally with Sales & Product to align initiatives and ensure a seamless user experience.' },
+                        { puesto: 'Growth & BI Specialist', empresa: 'Ontop, Buenos Aires', fecha: 'Abr 2023 - Abr 2025', descripcion: 'Increased conversion rates by 10% through A/B testing and experimentation on landing pages and onboarding flows.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies and refining CRM automations.\nDeveloped predictive cohort analysis that reduced churn by 15%, identifying key drop-off points and implemented targeted retention efforts.\nAutomated Tableau dashboards that provide real-time marketing insights, reducing decision-making time by 30% and enhancing reporting efficiency.\nEnhanced paid media ROAS by 25% through in-depth attribution modeling and cross-channel campaign optimization.\nSaved 10+ hours per week by automating data processes in Google Sheets, improving operational efficiency.' },
+                        { puesto: 'BI Specialist', empresa: 'Flippin, Buenos Aires', fecha: 'May 2022 - Dec 2022', descripcion: 'Optimized investment decisions for real estate clients by designing data-driven reports, increasing portfolio ROI by 12%.\nImplemented web scraping solutions that accelerated market trend analysis by 40%, providing real-time pricing insights.\nDeveloped WhatsApp chatbots that improved lead generation, reducing customer response time by 35%.' },
+                        { puesto: 'Managment Consultant CS&S', empresa: 'Accenture, Buenos Aires', fecha: 'Aug 2021 - Apr 2022', descripcion: 'Led Salesforce CPQ software implementation for enterprise clients.\nProvided pricing and sales strategy consulting, optimizing revenue operations.\nManaged Jira workflows, improving cross-functional collaboration and project execution speed.' }
                     ],
                     educacionList: [
                         { titulo: 'Data Analytics', institucion: 'Digital House, Buenos Aires', fecha: 'Abr 2020 - Sep 2020'},
-                        { titulo: 'Business Administration Degree', institucion: 'Universidad de San Andres, Buenos Aires', fecha: 'Jul 2013 - Jul 2017'}
+                        { titulo: 'Business Administration Degree', institucion: 'Universidad de San Andres, Buenos Aires', fecha: 'Jul 2013 - Jul 2017'},
+                        { titulo: 'Bilingual Bachelor', institucion: 'Saint Gregory\'s College, Buenos Aires', fecha: 'Feb 2010 - Dec 2012'}
                     ],
                     habilidadesList: [
                         { categoria: 'Growth Strategy & Analytics', lista: 'A/B Testing, Funnel Optimization, Cohort Analysis'},
                         { categoria: 'Business Intelligence', lista: 'Tableau, Power BI, Looker/Data Studio'},
-                        { categoria: 'Databases & SQL', lista: 'Amazon Redshift, MySQL'}
+                        { categoria: 'Databases & SQL', lista: 'Amazon Redshift, MySQL'},
+                        { categoria: 'Automation & Scripting', lista: 'Google Sheets Scripts, Alteryx'},
+                        { categoria: 'Project Management', lista: 'Jira, Agile Methodologies'},
+                        { categoria: 'Data Integration', lista: 'Zendesk, Jira, Financial Data'}
                     ]
                 };
 
