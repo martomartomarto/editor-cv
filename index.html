@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MARTITO'S INTERACTIVE CV EDITOR</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -61,7 +58,6 @@
         /* General Section Layout */
         .section {
             margin-bottom: 1.25rem;
-            page-break-inside: avoid;
         }
         h2.section-title {
             font-size: 10pt;
@@ -77,14 +73,13 @@
             padding-top: 0.25rem;
         }
         #preview-perfil {
-            font-size: 9pt; /* Profile font size as requested */
+            font-size: 9.5pt;
             line-height: 1.6;
         }
 
         /* Employment History & Education Layout */
         .item-block {
             margin-bottom: 1.25rem;
-            page-break-inside: avoid; /* Prevents item from breaking across pages */
         }
         .item-header {
             display: flex;
@@ -111,9 +106,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem 1.5rem;
         }
-        .skill-item {
-             page-break-inside: avoid;
-        }
         .skill-item h3 { font-size: 9.5pt; font-weight: 600; margin-bottom: 2px; }
         .skill-item p { font-size: 8.5pt; color: #4a5568; line-height: 1.5; }
 
@@ -123,6 +115,39 @@
         .control-btn:hover { background-color: #e5e7eb; }
         .control-btn.delete-btn { color: #ef4444; }
         .control-btn.move-btn { color: #3b82f6; }
+        
+        /* === PRINT STYLES === */
+        @media print {
+            body > *:not(#cv-preview-container) {
+                display: none;
+            }
+            body {
+                margin: 0;
+                background: none;
+            }
+            #cv-preview-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                font-size: 7pt !important; /* Font size reduced for export */
+                min-height: 0;
+            }
+             h1#preview-nombre { font-size: 21pt !important; }
+            #preview-header-contact { font-size: 7pt !important; }
+            .sub-header-item { font-size: 7pt !important; }
+            h2.section-title { font-size: 8pt !important; }
+            #preview-perfil { font-size: 7.5pt !important; }
+            .item-header h3 { font-size: 9pt !important; }
+            .item-header .date { font-size: 7pt !important; }
+            .item-block li { font-size: 7pt !important; }
+            .education-institution { font-size: 7pt !important; }
+            .skill-item h3 { font-size: 8pt !important; }
+            .skill-item p { font-size: 7pt !important; }
+            .section, .item-block {
+                page-break-inside: avoid;
+            }
+        }
+
     </style>
 </head>
 <body class="bg-gray-100">
@@ -198,7 +223,7 @@
                             <div class="sub-header-item"><span>Nationality</span><span id="preview-nacionalidad"></span></div>
                         </div>
 
-                        <main>
+                        <main id="preview-main-content">
                             <section id="preview-perfil-section" class="section">
                                 <h2 class="section-title">Profile</h2>
                                 <div id="preview-perfil" class="section-content"></div>
@@ -224,8 +249,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const { jsPDF } = window.jspdf;
-
             const fields = ['nombre', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
@@ -363,28 +386,7 @@
                 });
 
                 document.getElementById('download-pdf').addEventListener('click', () => {
-                    const cvPreview = document.getElementById('cv-preview-container');
-                    html2canvas(cvPreview, { scale: 3, useCORS: true, logging: false }).then(canvas => {
-                        const imgData = canvas.toDataURL('image/png');
-                        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                        const imgWidth = pdf.internal.pageSize.getWidth();
-                        const pageHeight = pdf.internal.pageSize.getHeight();
-                        // CORRECTED: Calculate height based on aspect ratio to prevent stretching
-                        const imgHeight = canvas.height * imgWidth / canvas.width;
-                        let heightLeft = imgHeight;
-                        let position = 0;
-
-                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
-
-                        while (heightLeft > 0) {
-                          position = heightLeft - imgHeight;
-                          pdf.addPage();
-                          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                          heightLeft -= pageHeight;
-                        }
-                        pdf.save("professional-cv.pdf");
-                    });
+                   window.print();
                 });
                 
                 if (localStorage.getItem('isDataSaved')) { 
@@ -402,4 +404,3 @@
     </script>
 </body>
 </html>
-
