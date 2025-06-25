@@ -28,12 +28,6 @@
             will-change: transform;
         }
         
-        #language-selector-container {
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            z-index: 100;
-        }
         #language-selector {
             padding: 0.5rem;
             border-radius: 8px;
@@ -43,6 +37,7 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
         #cv-preview-container {
             width: 100%;
             padding: 1rem;
@@ -62,20 +57,10 @@
             flex-shrink: 0;
         }
         @media (min-width: 1024px) {
-            #cv-preview-container {
-                width: 21cm;
-                padding: 1.5cm;
-            }
-            h1#preview-nombre {
-                font-size: 24pt;
-            }
-            #preview-header-contact {
-                font-size: 9pt;
-            }
-            #preview-photo {
-                width: 3.5cm;
-                height: 3.5cm;
-            }
+            #cv-preview-container { width: 21cm; padding: 1.5cm; }
+            h1#preview-nombre { font-size: 24pt; }
+            #preview-header-contact { font-size: 9pt; }
+            #preview-photo { width: 3.5cm; height: 3.5cm; }
         }
         
         #preview-header { 
@@ -100,10 +85,7 @@
             font-size: 8pt;
         }
         @media (min-width: 1024px) {
-             .sub-header-item {
-                padding: 0 1rem;
-                font-size: 9pt;
-            }
+             .sub-header-item { padding: 0 1rem; font-size: 9pt; }
         }
         .sub-header-item:not(:last-child) { border-right: 1px solid #e2e8f0; }
         .sub-header-item-label { font-weight: 600; }
@@ -128,11 +110,7 @@
             margin-bottom: 0.25rem;
         }
         @media (min-width: 640px) {
-            .item-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: baseline;
-            }
+            .item-header { flex-direction: row; justify-content: space-between; align-items: baseline; }
         }
         .item-header h3 { font-size: 11pt; font-weight: 600; }
         .item-header .date { font-size: 9pt; color: #718096; white-space: nowrap; }
@@ -145,10 +123,7 @@
             gap: 0.75rem;
         }
         @media (min-width: 640px) {
-            #preview-habilidades-list {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.5rem 1.5rem;
-            }
+            #preview-habilidades-list { grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; }
         }
         .skill-item h3 { font-size: 9.5pt; font-weight: 600; margin-bottom: 2px; }
         .skill-item p { font-size: 8.5pt; color: #4a5568; line-height: 1.5; }
@@ -175,24 +150,26 @@
 
     <div id="background-animation-container"></div>
 
-    <div id="language-selector-container">
-        <select id="language-selector">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-        </select>
-    </div>
-
-    <div class="container mx-auto p-4 lg:p-8" style="background-color: transparent;">
-        <header class="text-center mb-8">
-            <h1 class="text-2xl lg:text-4xl font-bold text-gray-800">MARTITO'S INTERACTIVE CV EDITOR</h1>
-            <p class="text-gray-600 mt-2">Bienvenidos a una nueva obra maestra by martin.</p>
-        </header>
-
-        <div class="fixed top-4 right-4 z-50">
+    <div id="top-bar" class="w-full p-4 flex justify-between items-center bg-white shadow-md lg:bg-transparent lg:shadow-none lg:fixed">
+        <div id="language-selector-container">
+            <select id="language-selector">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+        </div>
+        <div class="download-button-container">
             <button id="download-image" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 lg:py-3 lg:px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 text-sm lg:text-base">
                 Download Image
             </button>
         </div>
+    </div>
+
+
+    <div class="container mx-auto px-4 pt-24 pb-4 lg:pt-8 lg:px-8" style="background-color: transparent;">
+        <header class="text-center mb-8">
+            <h1 class="text-2xl lg:text-4xl font-bold text-gray-800">MARTITO'S INTERACTIVE CV EDITOR</h1>
+            <p class="text-gray-600 mt-2">Bienvenidos a una nueva obra maestra by martin.</p>
+        </header>
 
         <div class="flex flex-col lg:flex-row gap-8">
             <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
@@ -211,12 +188,12 @@
                     </div>
                 </div>
                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Profile</h2>
+                    <h2 class="text-xl font-bold mb-4 text-blue-800">Executive Summary</h2>
                     <textarea id="perfil" placeholder="Describe your professional profile, strengths, and goals..." class="w-full p-2 border rounded-md h-32 focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
                 <div class="p-4 border border-gray-200 rounded-lg">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Employment History</h2>
+                        <h2 class="text-xl font-bold text-blue-800">Professional Experience</h2>
                         <button id="add-experiencia" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
                     </div>
                     <div id="experiencia-list" class="space-y-4"></div>
@@ -298,90 +275,15 @@
             const maxSpeed = 1.5;
             let animationFrameId;
 
-            function initAnimation() {
-                const container = document.getElementById('background-animation-container');
-                if (!container) return;
-                container.innerHTML = ''; 
-                heads.length = 0; 
-                for (let i = 0; i < numHeads; i++) {
-                    const headElement = document.createElement('img');
-                    headElement.src = headImageSrc;
-                    headElement.className = 'rolling-head';
-                    headElement.style.width = `${headSize}px`;
-                    headElement.style.height = 'auto';
-                    container.appendChild(headElement);
-                    heads.push({
-                        element: headElement,
-                        x: Math.random() * window.innerWidth,
-                        y: Math.random() * window.innerHeight,
-                        vx: (Math.random() * (maxSpeed - minSpeed) + minSpeed) * (Math.random() < 0.5 ? 1 : -1),
-                        vy: (Math.random() * (maxSpeed - minSpeed) + minSpeed) * (Math.random() < 0.5 ? 1 : -1),
-                        rotation: Math.random() * 360,
-                        rotationSpeed: (Math.random() - 0.5) * 2,
-                    });
-                }
-            }
+            function initAnimation(){const container=document.getElementById("background-animation-container");if(!container)return;container.innerHTML="",heads.length=0;for(let e=0;e<numHeads;e++){const t=document.createElement("img");t.src=headImageSrc,t.className="rolling-head",t.style.width=`${headSize}px`,t.style.height="auto",container.appendChild(t),heads.push({element:t,x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),vy:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),rotation:360*Math.random(),rotationSpeed:2*(Math.random()-.5)})}}
+            function animate(){heads.forEach(e=>{e.x+=e.vx,e.y+=e.vy,e.rotation+=e.rotationSpeed,(e.x<0||e.x>window.innerWidth-headSize)&&(e.vx*=-1),(e.y<0||e.y>window.innerHeight-headSize)&&(e.vy*=-1),e.element.style.transform=`translate(${e.x}px, ${e.y}px) rotate(${e.rotation}deg)`}),animationFrameId=requestAnimationFrame(animate)}
+            const fields=["nombre","ubicacion","email","telefono","linkedin","fechaNacimiento","nacionalidad","perfil"],lists=["experiencia","educacion","habilidades"];
             
-            function animate() {
-                heads.forEach(head => {
-                    head.x += head.vx;
-                    head.y += head.vy;
-                    head.rotation += head.rotationSpeed;
-                    if (head.x < 0 || head.x > window.innerWidth - headSize) { head.vx *= -1; }
-                    if (head.y < 0 || head.y > window.innerHeight - headSize) { head.vy *= -1; }
-                    head.element.style.transform = `translate(${head.x}px, ${head.y}px) rotate(${head.rotation}deg)`;
-                });
-                animationFrameId = requestAnimationFrame(animate);
-            }
+            window.deleteItem=e=>{document.getElementById(`form-${e}`)?.remove(),saveData(),updatePreview()},window.moveItemUp=e=>{const t=document.getElementById(`form-${e}`);t?.previousElementSibling&&t.parentNode.insertBefore(t,t.previousElementSibling),saveData(),updatePreview()},window.moveItemDown=e=>{const t=document.getElementById(`form-${e}`);t?.nextElementSibling&&t.parentNode.insertBefore(t.nextElementSibling,t),saveData(),updatePreview()};
+            const saveData=()=>{fields.forEach(e=>{const t=document.getElementById(e);t&&localStorage.setItem(e,t.value)}),lists.forEach(e=>{const t=Array.from(document.querySelectorAll(`#${e}-list .item-form`)).map(e=>{const t={};return e.querySelectorAll("input, textarea").forEach(e=>{t[e.dataset.key]=e.value}),t});localStorage.setItem(`${e}List`,JSON.stringify(t))});const e=document.getElementById("preview-photo").src;e&&!e.startsWith("https://placehold.co")&&localStorage.setItem("userPhoto",e)};
+            const updatePreview=()=>{document.getElementById("preview-nombre").textContent=document.getElementById("nombre").value;const e=[document.getElementById("ubicacion").value,document.getElementById("telefono").value,document.getElementById("email").value];document.getElementById("preview-header-contact").textContent=e.filter(Boolean).join("  ·  ");const t=document.getElementById("linkedin").value,a=document.getElementById("preview-linkedin-container"),n='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.325 0-1.845.723-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>';t?a.innerHTML=`<a href="${t}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-700 hover:underline flex items-center gap-1.5" style="font-size: 8.5pt;">${n} <span>${t.replace("https://www.","").replace("http://www.","").replace(/\/$/,"")}</span></a>`:a.innerHTML="",document.getElementById("preview-fechaNacimiento").textContent=document.getElementById("fechaNacimiento").value,document.getElementById("preview-nacionalidad").textContent=document.getElementById("nacionalidad").value,document.getElementById("preview-perfil").textContent=document.getElementById("perfil").value,lists.forEach(e=>{const t=document.getElementById(`preview-${e}-list`);t.innerHTML="";const a=JSON.parse(localStorage.getItem(`${e}List`))||[];a.forEach(a=>{const n=document.createElement("div");updateListPreview(e,n,a),t.appendChild(n)})})};
             
-            const fields = ['nombre', 'ubicacion', 'email', 'telefono', 'linkedin', 'fechaNacimiento', 'nacionalidad', 'perfil'];
-            const lists = ['experiencia', 'educacion', 'habilidades'];
-
-            window.deleteItem = (itemId) => { document.getElementById(`form-${itemId}`)?.remove(); saveData(); updatePreview(); };
-            window.moveItemUp = (itemId) => { const formItem = document.getElementById(`form-${itemId}`); if (formItem?.previousElementSibling) { formItem.parentNode.insertBefore(formItem, formItem.previousElementSibling); saveData(); updatePreview(); } };
-            window.moveItemDown = (itemId) => { const formItem = document.getElementById(`form-${itemId}`); if (formItem?.nextElementSibling) { formItem.parentNode.insertBefore(formItem.nextElementSibling, formItem); saveData(); updatePreview(); } };
-
-            const saveData = () => {
-                fields.forEach(id => { const element = document.getElementById(id); if (element) localStorage.setItem(id, element.value); });
-                lists.forEach(listName => {
-                    const items = Array.from(document.querySelectorAll(`#${listName}-list .item-form`)).map(form => { const itemData = {}; form.querySelectorAll('input, textarea').forEach(input => { itemData[input.dataset.key] = input.value; }); return itemData; });
-                    localStorage.setItem(`${listName}List`, JSON.stringify(items));
-                });
-                const photoSrc = document.getElementById('preview-photo').src;
-                if(photoSrc && !photoSrc.startsWith('https://placehold.co')) { localStorage.setItem('userPhoto', photoSrc); }
-            };
-
-            const updatePreview = () => {
-                document.getElementById('preview-nombre').textContent = document.getElementById('nombre').value;
-                const headerContactParts = [ document.getElementById('ubicacion').value, document.getElementById('telefono').value, document.getElementById('email').value ];
-                document.getElementById('preview-header-contact').textContent = headerContactParts.filter(Boolean).join('  ·  ');
-                
-                const linkedinUrl = document.getElementById('linkedin').value;
-                const linkedinContainer = document.getElementById('preview-linkedin-container');
-                const linkedinIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.325 0-1.845.723-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>`;
-                if (linkedinUrl) {
-                    linkedinContainer.innerHTML = `<a href="${linkedinUrl}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-700 hover:underline flex items-center gap-1.5" style="font-size: 8.5pt;">${linkedinIcon} <span>${linkedinUrl.replace('https://www.','').replace('http://www.','').replace(/\/$/, "")}</span></a>`;
-                } else {
-                    linkedinContainer.innerHTML = '';
-                }
-
-                document.getElementById('preview-fechaNacimiento').textContent = document.getElementById('fechaNacimiento').value;
-                document.getElementById('preview-nacionalidad').textContent = document.getElementById('nacionalidad').value;
-                document.getElementById('preview-perfil').textContent = document.getElementById('perfil').value;
-                
-                lists.forEach(listName => {
-                    const previewListContainer = document.getElementById(`preview-${listName}-list`);
-                    previewListContainer.innerHTML = ''; 
-                    const items = JSON.parse(localStorage.getItem(`${listName}List`)) || [];
-                    items.forEach(item => {
-                         const previewDiv = document.createElement('div');
-                         // *** CORRECCIÓN APLICADA AQUÍ ***
-                         updateListPreview(listName, previewDiv, item);
-                         previewListContainer.appendChild(previewDiv);
-                    });
-                });
-            };
-
+            // *** FUNCIÓN MODIFICADA: AÑADIR NUEVOS ITEMS AL PRINCIPIO ***
             const addToList = (listName, data = {}) => {
                 const listContainer = document.getElementById(`${listName}-list`);
                 const itemId = `${listName}-${Date.now()}-${Math.random()}`;
@@ -394,103 +296,18 @@
                 else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
                 const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
                 formDiv.innerHTML = formContent + controls;
-                listContainer.appendChild(formDiv);
+                // Usamos prepend() en lugar de appendChild()
+                listContainer.prepend(formDiv); 
                 formDiv.querySelectorAll('input, textarea').forEach(input => {
                     input.addEventListener('input', () => { saveData(); updatePreview(); });
                 });
             };
-           
-            const updateListPreview = (listName, previewDiv, data) => {
-                 if (listName === 'experiencia') { 
-                     previewDiv.className = 'item-block';
-                     previewDiv.innerHTML = `<div class="item-header"><h3>${data.puesto || ''}</h3><p class="date">${data.fecha || ''}</p></div><ul>${(data.descripcion || '').split('\n').map(line => line.trim() ? `<li>${line.trim()}</li>` : '').join('')}</ul>`; 
-                 } else if (listName === 'educacion') {
-                     previewDiv.className = 'item-block';
-                     previewDiv.innerHTML = `<div class="item-header"><h3>${data.titulo || ''}</h3><p class="date">${data.fecha || ''}</p></div><p class="education-institution">${data.institucion || ''}</p>`;
-                 } else if (listName === 'habilidades') {
-                     previewDiv.className = 'skill-item';
-                     previewDiv.innerHTML = `<div><h3>${data.categoria || ''}</h3><p>${data.lista || ''}</p></div>`;
-                 }
-            };
-            
-            const loadSampleData = (lang) => {
-                lists.forEach(listName => { document.getElementById(`${listName}-list`).innerHTML = ''; });
-                const sampleData = translations[lang].sampleData;
-                fields.forEach(id => { const input = document.getElementById(id); if (input && sampleData[id] !== undefined) input.value = sampleData[id]; });
-                lists.forEach(listName => { const listKey = `${listName}List`; if (sampleData[listKey]) { sampleData[listKey].forEach(item => addToList(listName, item)); } });
-                const previewPhoto = document.getElementById('preview-photo');
-                const savedPhoto = localStorage.getItem('userPhoto');
-                if (previewPhoto) {
-                    previewPhoto.src = savedPhoto || "https://placehold.co/400x400/e2e8f0/e2e8f0?text=+";
-                }
-            };
-            
-            const clearSavedData = () => {
-                fields.forEach(id => localStorage.removeItem(id));
-                lists.forEach(listName => localStorage.removeItem(`${listName}List`));
-            };
 
-            const applyTranslations = (lang) => {
-                const uiStrings = translations[lang].ui;
-                document.querySelectorAll('[data-translate]').forEach(el => {
-                    const key = el.getAttribute('data-translate');
-                    if (uiStrings[key]) { el.textContent = uiStrings[key]; }
-                });
-                clearSavedData();
-                loadSampleData(lang);
-                saveData();
-                updatePreview();
-            };
-
-            const initializeApp = () => {
-                fields.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', () => { saveData(); updatePreview(); }); });
-                lists.forEach(listName => { const btn = document.getElementById(`add-${listName}`); if (btn) btn.addEventListener('click', () => { addToList(listName); saveData(); updatePreview(); }); });
-                document.getElementById('photo-upload').addEventListener('change', (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            document.getElementById('preview-photo').src = e.target.result;
-                            localStorage.setItem('userPhoto', e.target.result); 
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-                document.getElementById('download-image').addEventListener('click', () => {
-                    const cvPreview = document.getElementById('cv-preview-container');
-                    const downloadButton = document.getElementById('download-image');
-                    downloadButton.textContent = 'Generating...';
-                    downloadButton.disabled = true;
-                    cvPreview.classList.add('export-mode');
-                    html2canvas(cvPreview, { scale: 3, useCORS: true, logging: false, windowWidth: cvPreview.scrollWidth, windowHeight: cvPreview.scrollHeight })
-                        .then(canvas => {
-                            cvPreview.classList.remove('export-mode');
-                            const link = document.createElement('a');
-                            link.download = `cv-martin-mastrogiacomo-${document.getElementById('language-selector').value}.png`;
-                            link.href = canvas.toDataURL('image/png');
-                            link.click();
-                            downloadButton.textContent = 'Download Image';
-                            downloadButton.disabled = false;
-                        }).catch(err => {
-                            console.error("Error generating image:", err);
-                            cvPreview.classList.remove('export-mode');
-                            downloadButton.textContent = 'Download Image';
-                            downloadButton.disabled = false;
-                        });
-                });
-
-                const langSelector = document.getElementById('language-selector');
-                langSelector.addEventListener('change', (e) => {
-                    applyTranslations(e.target.value);
-                });
-
-                applyTranslations('en');
-                
-                if (animationFrameId) cancelAnimationFrame(animationFrameId);
-                initAnimation();
-                animate();
-            };
-
+            const updateListPreview=(e,t,a)=>{if("experiencia"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.puesto||""}</h3><p class="date">${a.fecha||""}</p></div><ul>${(a.descripcion||"").split("\n").map(e=>e.trim()?`<li>${e.trim()}</li>`:"").join("")}</ul>`;else if("educacion"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.titulo||""}</h3><p class="date">${a.fecha||""}</p></div><p class="education-institution">${a.institucion||""}</p>`;else if("habilidades"===e){t.className="skill-item",t.innerHTML=`<div><h3>${a.categoria||""}</h3><p>${a.lista||""}</p></div>`}};
+            const loadSampleData=e=>{lists.forEach(e=>{document.getElementById(`${e}-list`).innerHTML=""});const t=translations[e].sampleData;fields.forEach(e=>{const a=document.getElementById(e);a&&void 0!==t[e]&&(a.value=t[e])}),lists.forEach(e=>{const a=e+"List";if(t[a]){const n=t[a].slice().reverse();n.forEach(t=>{addToList(e,t)})}});const a=document.getElementById("preview-photo"),n=localStorage.getItem("userPhoto");a&&(a.src=n||"https://placehold.co/400x400/e2e8f0/e2e8f0?text=+")};
+            const clearSavedData=()=>{fields.forEach(e=>localStorage.removeItem(e)),lists.forEach(e=>localStorage.removeItem(`${e}List`))};
+            const applyTranslations=e=>{const t=translations[e].ui;document.querySelectorAll("[data-translate]").forEach(a=>{const n=a.getAttribute("data-translate");t[n]&&(a.textContent=t[n])}),clearSavedData(),loadSampleData(e),saveData(),updatePreview()};
+            const initializeApp=()=>{fields.forEach(e=>{const t=document.getElementById(e);t&&t.addEventListener("input",()=>{saveData(),updatePreview()})}),lists.forEach(e=>{const t=document.getElementById(`add-${e}`);t&&t.addEventListener("click",()=>{addToList(e),saveData(),updatePreview()})}),document.getElementById("photo-upload").addEventListener("change",e=>{const t=e.target.files[0];if(t){const a=new FileReader;a.onload=e=>{document.getElementById("preview-photo").src=e.target.result,localStorage.setItem("userPhoto",e.target.result)},a.readAsDataURL(t)}}),document.getElementById("download-image").addEventListener("click",()=>{const e=document.getElementById("cv-preview-container"),t=document.getElementById("download-image");t.textContent="Generating...",t.disabled=!0,e.classList.add("export-mode"),html2canvas(e,{scale:3,useCORS:!0,logging:!1,windowWidth:e.scrollWidth,windowHeight:e.scrollHeight}).then(a=>{e.classList.remove("export-mode");const n=document.createElement("a");n.download=`cv-martin-mastrogiacomo-${document.getElementById("language-selector").value}.png`,n.href=a.toDataURL("image/png"),n.click(),t.textContent="Download Image",t.disabled=!1}).catch(a=>{console.error("Error generating image:",a),e.classList.remove("export-mode"),t.textContent="Download Image",t.disabled=!1})});const e=document.getElementById("language-selector");e.addEventListener("change",e=>{applyTranslations(e.target.value)}),applyTranslations("en"),animationFrameId&&cancelAnimationFrame(animationFrameId),initAnimation(),animate()};
             initializeApp();
         });
     </script>
