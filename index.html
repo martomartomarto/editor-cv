@@ -7,14 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
         }
         #cv-preview-container {
             width: 21cm;
-            min-height: 29.7cm;
             padding: 1.5cm;
             background: white;
             color: #1a202c;
@@ -59,13 +57,7 @@
 
         /* General Section Layout */
         .section {
-            display: flex;
-            gap: 1.5rem;
             margin-bottom: 1.25rem;
-        }
-        .section-title-container {
-            flex-basis: 22%;
-            flex-shrink: 0;
         }
         h2.section-title {
             font-size: 10pt;
@@ -78,12 +70,9 @@
             margin-bottom: 0.75rem;
         }
         .section-content {
-            flex-grow: 1;
             padding-top: 0.25rem;
         }
         #preview-perfil {
-            border-left: 1px solid #e2e8f0;
-            padding-left: 1.5rem;
             font-size: 9.5pt;
             line-height: 1.6;
         }
@@ -113,8 +102,6 @@
         
         /* Skills Layout */
         #preview-habilidades-list {
-            border-left: 1px solid #e2e8f0;
-            padding-left: 1.5rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem 1.5rem;
@@ -433,3 +420,4 @@
     </script>
 </body>
 </html>
+
