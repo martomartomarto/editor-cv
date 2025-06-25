@@ -125,7 +125,7 @@
     <div class="container mx-auto p-4 lg:p-8" style="background-color: transparent;">
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800">MARTITO'S INTERACTIVE CV EDITOR</h1>
-            <p class="text-gray-600 mt-2">Bienvenidos a una nueva forma de crear tu CV.</p>
+            <p class="text-gray-600 mt-2">Fill, organize, and download your professional CV instantly.</p>
         </header>
 
         <div class="fixed top-4 right-4 z-50">
@@ -217,11 +217,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- INICIO: CÓDIGO PARA LA ANIMACIÓN ---
-
-            // Apuntando a la imagen local en tu proyecto
+            // --- Animación de fondo ---
             const headImageSrc = 'Subject.png';
-            
             const heads = [];
             const numHeads = 15;
             const headSize = 90;
@@ -230,15 +227,16 @@
 
             function initAnimation() {
                 const container = document.getElementById('background-animation-container');
+                if (!container) return;
+                container.innerHTML = ''; // Limpiar cabezas de animaciones anteriores
+                heads.length = 0; // Vaciar el array
                 for (let i = 0; i < numHeads; i++) {
                     const headElement = document.createElement('img');
                     headElement.src = headImageSrc;
                     headElement.className = 'rolling-head';
                     headElement.style.width = `${headSize}px`;
                     headElement.style.height = 'auto';
-                    
                     container.appendChild(headElement);
-
                     heads.push({
                         element: headElement,
                         x: Math.random() * window.innerWidth,
@@ -251,26 +249,20 @@
                 }
             }
 
+            let animationFrameId;
             function animate() {
                 heads.forEach(head => {
                     head.x += head.vx;
                     head.y += head.vy;
                     head.rotation += head.rotationSpeed;
-
-                    if (head.x < 0 || head.x > window.innerWidth - headSize) {
-                        head.vx *= -1;
-                    }
-                    if (head.y < 0 || head.y > window.innerHeight - headSize) {
-                        head.vy *= -1;
-                    }
-
+                    if (head.x < 0 || head.x > window.innerWidth - headSize) { head.vx *= -1; }
+                    if (head.y < 0 || head.y > window.innerHeight - headSize) { head.vy *= -1; }
                     head.element.style.transform = `translate(${head.x}px, ${head.y}px) rotate(${head.rotation}deg)`;
                 });
-
-                requestAnimationFrame(animate);
+                animationFrameId = requestAnimationFrame(animate);
             }
             
-            // --- Resto del script ---
+            // --- Lógica principal del CV ---
             const fields = ['nombre', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
@@ -291,7 +283,6 @@
                 if(photoSrc && !photoSrc.startsWith('https://placehold.co')) {
                     localStorage.setItem('userPhoto', photoSrc);
                 }
-                localStorage.setItem('isDataSaved', 'true');
             };
 
             const updatePreview = () => {
@@ -321,20 +312,16 @@
             const addToList = (listName, data = {}) => {
                 const listContainer = document.getElementById(`${listName}-list`);
                 const itemId = `${listName}-${Date.now()}-${Math.random()}`;
-
                 const formDiv = document.createElement('div');
                 formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
                 formDiv.id = `form-${itemId}`;
-               
                 let formContent = '';
                 if (listName === 'experiencia') { formContent = `<input type="text" data-key="puesto" placeholder="Position, Company" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Apr 2023 - Present)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description (one achievement per line)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`; } 
                 else if (listName === 'educacion') { formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`; } 
                 else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills (comma-separated)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
-               
                 const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
                 formDiv.innerHTML = formContent + controls;
                 listContainer.appendChild(formDiv);
-               
                 formDiv.querySelectorAll('input, textarea').forEach(input => {
                     input.addEventListener('input', () => { saveData(); updatePreview(); });
                 });
@@ -352,8 +339,14 @@
                      previewDiv.innerHTML = `<div><h3>${data.categoria || ''}</h3><p>${data.lista || ''}</p></div>`;
                  }
             };
-
+            
+            // Función que define tus datos predeterminados
             const loadSampleData = () => {
+                // Limpiar formularios de listas dinámicas
+                lists.forEach(listName => {
+                    document.getElementById(`${listName}-list`).innerHTML = '';
+                });
+
                 const sampleData = {
                     nombre: 'Martín Mastrogiacomo',
                     ubicacion: 'Buenos Aires, Argentina',
@@ -367,89 +360,77 @@
                     habilidadesList: [{categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"},{categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"},{categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"},{categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"},{categoria:"Project Management",lista:"Jira, Agile Methodologies"},{categoria:"Data Integration",lista:"Zendesk, Jira, Financial Data"}]
                 };
 
-                fields.forEach(id => { const input = document.getElementById(id); if (input && sampleData[id]) input.value = sampleData[id]; });
+                fields.forEach(id => { const input = document.getElementById(id); if (input && sampleData[id] !== undefined) input.value = sampleData[id]; });
                 lists.forEach(listName => { const listKey = `${listName}List`; if (sampleData[listKey]) { sampleData[listKey].forEach(item => addToList(listName, item)); } });
+                
+                // Pone la imagen por defecto en el preview del CV, pero no en el localStorage
+                const previewPhoto = document.getElementById('preview-photo');
+                if(previewPhoto) previewPhoto.src = "https://placehold.co/400x400/e2e8f0/e2e8f0?text=+";
             };
-
-            const loadDataFromStorage = () => {
-                fields.forEach(id => { const savedValue = localStorage.getItem(id); if (savedValue !== null) document.getElementById(id).value = savedValue; });
-                lists.forEach(listName => { const savedList = JSON.parse(localStorage.getItem(`${listName}List`)); if (savedList) savedList.forEach(itemData => addToList(listName, itemData)); });
-                const savedPhoto = localStorage.getItem('userPhoto');
-                if (savedPhoto) {
-                    document.getElementById('preview-photo').src = savedPhoto;
-                }
+            
+            // *** NUEVA FUNCIÓN PARA LIMPIAR DATOS GUARDADOS ***
+            const clearSavedData = () => {
+                fields.forEach(id => localStorage.removeItem(id));
+                lists.forEach(listName => localStorage.removeItem(`${listName}List`));
+                localStorage.removeItem('userPhoto');
             };
 
             const initializeApp = () => {
+                // Configurar listeners de los campos y botones
                 fields.forEach(id => {
                     const element = document.getElementById(id);
-                    if (element) {
-                        element.addEventListener('input', () => { saveData(); updatePreview(); });
-                    }
+                    if (element) { element.addEventListener('input', () => { saveData(); updatePreview(); }); }
                 });
-
                 lists.forEach(listName => {
                     const addButton = document.getElementById(`add-${listName}`);
-                    if (addButton) {
-                        addButton.addEventListener('click', () => { addToList(listName); saveData(); updatePreview(); });
-                    }
+                    if (addButton) { addButton.addEventListener('click', () => { addToList(listName); saveData(); updatePreview(); }); }
                 });
-               
                 document.getElementById('photo-upload').addEventListener('change', (event) => {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             document.getElementById('preview-photo').src = e.target.result;
-                            saveData();
+                            localStorage.setItem('userPhoto', e.target.result); // Guardar foto en storage
                         };
                         reader.readAsDataURL(file);
                     }
                 });
-
                 document.getElementById('download-image').addEventListener('click', () => {
                     const cvPreview = document.getElementById('cv-preview-container');
                     const downloadButton = document.getElementById('download-image');
-                   
                     downloadButton.textContent = 'Generating...';
                     downloadButton.disabled = true;
-
                     cvPreview.classList.add('export-mode');
-
-                    html2canvas(cvPreview, { 
-                        scale: 3, 
-                        useCORS: true, 
-                        logging: false,
-                        windowWidth: cvPreview.scrollWidth,
-                        windowHeight: cvPreview.scrollHeight
-                    }).then(canvas => {
-                        cvPreview.classList.remove('export-mode');
-
-                        const link = document.createElement('a');
-                        link.download = 'professional-cv.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                       
-                        downloadButton.textContent = 'Download Image';
-                        downloadButton.disabled = false;
-
-                    }).catch(err => {
-                        console.error("Error generating image:", err);
-                        cvPreview.classList.remove('export-mode');
-                        downloadButton.textContent = 'Download Image';
-                        downloadButton.disabled = false;
-                    });
+                    html2canvas(cvPreview, { scale: 3, useCORS: true, logging: false, windowWidth: cvPreview.scrollWidth, windowHeight: cvPreview.scrollHeight })
+                        .then(canvas => {
+                            cvPreview.classList.remove('export-mode');
+                            const link = document.createElement('a');
+                            link.download = 'professional-cv.png';
+                            link.href = canvas.toDataURL('image/png');
+                            link.click();
+                            downloadButton.textContent = 'Download Image';
+                            downloadButton.disabled = false;
+                        }).catch(err => {
+                            console.error("Error generating image:", err);
+                            cvPreview.classList.remove('export-mode');
+                            downloadButton.textContent = 'Download Image';
+                            downloadButton.disabled = false;
+                        });
                 });
                
-                if (localStorage.getItem('isDataSaved')) { 
-                    loadDataFromStorage(); 
-                } else { 
-                    loadSampleData(); 
-                    saveData();
-                }
-               
+                // *** LÓGICA DE CARGA MODIFICADA ***
+                // 1. Siempre limpia los datos guardados para un estado fresco.
+                clearSavedData();
+                // 2. Siempre carga la información de la plantilla.
+                loadSampleData();
+                // 3. Guarda este estado inicial en localStorage para la sesión actual.
+                saveData();
+                // 4. Actualiza la vista previa.
                 updatePreview(); 
                 
+                // Iniciar la animación
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
                 initAnimation();
                 animate();
             };
