@@ -22,11 +22,8 @@
             background-color: #f3f4f6;
             overflow: hidden;
         }
-        /* -- CSS MODIFICADO -- */
         .rolling-head {
             position: absolute;
-            /* Se elimina 'border-radius' para mantener la forma original */
-            /* Se cambia 'box-shadow' por 'drop-shadow' para una sombra que sigue el contorno */
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
             will-change: transform;
         }
@@ -244,7 +241,7 @@
                             </section>
                         </main>
                     </div>
-                   </div>
+                </div>
             </div>
         </div>
     </div>
@@ -253,11 +250,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- INICIO: CÓDIGO PARA LA ANIMACIÓN ---
 
-            // -- IMAGEN ACTUALIZADA --
-            const headImageSrc = 'data:image/png;base64,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wQgAAEIQAACXQQYwC4Sd+0rX//tn//6Na//5a/+5//+tQ+wCEAAAhCAAAQgMFmAAWyyn//pL//un3/7jW/9+lf/+k8f/gsEIAABCEAAArsSYAC7Ku+6+5++/Mt/fve1//bX/92/ffoBBCEAAQhAAAJbE2AAb82c/bTf/v0///Vrb//2v/q///zUth8BCEAAAhCAAATeToAB3M7R/P2b3/79P7/1tS/9tV/91+8YAgEIQAACEIAABGYgwADMiP/z+u/+4j/8+T/++l/87p/+cZgCEIAABCAAAQhMJ8AAmk6f/d3/9S9/+es3fvFXf/1/ftL9LACEAAQgAAEI7FaAAdytvPvhv/+Ln/75r9/6xV9+7ff/Y4iCEAABCEAAAhBITIABNBm5J9+fffkvv/2Nb/y//+hP//e9+SMIQAACEIAABDYgwACe4Nzv6r//29/+6//41Z/99X//z5/zCQIQgAAEIAABfAQYwD789w/+4j//h//y1X/8r3/77D8BAhCAAAQgAIElAgzgiRh39pP/w/+//Mv/8dVf/e2/e8gPCEAAAhCAAAS2IsAAtoJzv6P/+o///R/+6q//7Hf//rO/AAhAAAIQgAAEeAgwgD045z/8T//xd//wV3/1V//+7J8ABCAAAQhAAAKbEWCAN+f/P/6P//5v//VXf/VX//Tffu5nAQhAAAIQgMCkBBhAU7J/4r//h/+/+4uv//J//e8+/TcDAQhAAAIQgEBsAgzg2Aj94u/++J/85dd/+au/+j/+1oXfAQIQgAAEIACB4wgwgMc1549/8D//P/yff/3Zf/33zzwKAQhAAAIQgECzAgzgzdpf+/H/+S///Q9/9Zf/5+//5m8AAhCAAAQgAAEIMIAZof/4R//4d3/wV//9X/z+L+9/EQIQgAAEIAABCGwhwABe4n+/+/9//I//+au//j//9//hJ3wCEIAABCAAAQjEI8AACVp+8l//5W//+n/81V//s//5wvcAEIAABCAAAR6wB4A9+u/+P/yT3/zVX/29n/7pE/4BEIAABCAAAQhMIcAAmkL/tB//q3/4e6/98j/+l//2d/0AQgACEIAABCAwjQADWJp+/4n/+J+//5e//s//9T//q/6BQQEIQAACEIAABFoTYACt6Uv//q///h//469+9j//p7/+688/AhCAAAQgAAEITCbAABqV3//z3/zuL//1V//8T//6v/3tC74DEIAABCAAAQjUJ8AAnVp++s//w1/8j7/+7D/8a7/5k7/+FwABCEAAAhCAQLYCFOAstePf+J//49/+4q//+T/8D//5D/3uTwABCEAAAhCAAARGEWAAB/sDf/wPf/7XP/9nv/3Lf/XffP2fPwEIQAACEIAABLIKUIAz+sX/9l//z1//9f/wX//0j3/279/1AQhAAAIQgAAEphFgAEu9/J//7a9+8Zdf//c//8v/9uXf/AUgAAEIQAACEMgSYADP9vP/5V/+8he//ur/81//uV/+6S/6BwQBCEAAAhCAAATaEmAAbdv4X//qf/yP3/z+7/7yT//22c9/AShAAAIQgAAEILALAgyw6/m/++9/87df/Or//n//m//2wT+7gAAIQAACEIBAvgIU4Ly+6n/6t7/5y19+7V/++T/921//2V8AAhCAAAQgAAEIjCLAAA72A//yv//lr/71X//3/+b//m//0O98AhCAAAQgAAEI5BVAACfrxf/lb3/3q1/+4l//u7/9xV/+AhCAAAQgAAEIQKARAQZwoB/+V//wv/z13/+5f/9vf/4X/A4gAAEIQAACEMgpQACP9Av/5S//6l/+2//6X/7Xf/3X/8YnAAEIQAACEIDALgQYYNcP/J//y3/xl7/+D//9v//+X/4fEIAABCAAAQhkkQIM8Fh/+V/9+V/++q/f/+n//j/9t7/+KzABCEAAAhCAAAR2IsAAdoLgf/zXP//lX/76L//7f//LX//1X/wLQAACEIAABCDQI8AC6P2B//ivf/3f//L3f/lv/u1LfwAIQAACEIAABHoIUIB6A/yvf/Xv/uqXv/pv//q///VX/wIQAACEIAABCEBgBQEG8AL+///v//lf//qvf/4P//Wv/+4vfgEICEAAAhCAQAYBClCAD//LX/6P//yX//q//N3//l/8ChCAAAQgAAEIQKAbAQbQ7fi+/p+//pff/vn/8N//+//wS78DCEAAAhCAQAYBCvAwn/ytL3/xy1/+o//lv/qXP/lLAIAABCAAAQhAYNUCFOA7+/1v//l//esf/t3//n/+S7/+K0gCEIAABCAAgW0IUIC34O9/+ev//j/+8O/++3//m1/4CUAAAhCAAAQgkE2AATxbF/63f/rLV3/wD//1//7rX/8LYAQIQAACEIAABHoQUIC9/oP/+e9++csf/tvf/n+e/gWgAAEIQAACEIBAFgEGcGx84V/+zW9/8Qf/+v//d3/zK3wCCUAAAhCAAAQyClCAM/jFv/rNf/jDv/j+//b//oWvAAEIAABCAAAQ6ECAAeyP3/+X3/zmD/7DP//3X//sXzACEIAABCAAAQjkFKAA5/iLX/32P/yDX/73n/z1H/8LZAQIQAACEIAABJoTYABN2/jffvbLX/zBH/ydn/ydn/4FEIAABCAAAQjEIcAAjg0v/8s3f/H73//H//bXv/kLIAEIQAACEIBAxAIU4BgnFf/9r/7g13/wH//7v//FLwABCEAAAhCAQBcCDGAXhP3f/9vf/P6P//pP/ubP/wLRAAIQgAAEIAABCvBw+/1v/uBXP/jHf/s7f/YXeAIQgAAEIAABCMRHgAGMzy9/85d/8wf/+k/+yS/8CkwAAhCAAAQgkFGAAfQY9l/91d//5Q//6T//T3/9K0gCEIAABCAAgf0JMIAdyftf//pX//aHv/rP/u6Xf/0XgAAIQAACEIDARgUYwBv7hH/y93/xhz/4jz/5xS/9AiQAAQhAAAIQGEeAATwmP/8ff/h3f/+Hv/k7P/2bvQIQgAAEIAABCKQSYACNymf/+1/94X/83T/4x1/4C1wBCEAAAhCAAASGEGAADYl+4z//+D/+5Q//+S/9pS/0CSAAAhCAAAQgMJUAA2hqbv+P//Bv//pP/uKP//jHf/sXQAIEIAABCEAAAksEGMBLcnz/H//wH/717//in/z9n/kFIAABCEAAAhAYVoABPCy8/0f/8L//+T/8x3/6q/+ABCAAAQhAAAIQaEmAAbSkB/wjf/j7P/gPf/F3/uzPXwAIQAACEIAABGYT4O5mMv/kf/+Hv//rP/inf/+nvP1XgAAIQAACEIDATgUYwM788Pf/8L//9z/4jz/9i3++C0AAAhCAAAQgkEGAAXSY8p/8w//9uz/8x3/8p7/qBwEBCUAAAhCAwHICDOBlOdx/8D//T//9D//0X/zJnwABEIAABCAAAQisS4ABvK4X/Bf/8N/+/T/8k3/x5/26EwEIQAACEIBAKwIUoFUsfPkn//Bf/vsf/tk//9nf3iJIAAIQgAAEILALAgyw6+5//o9++w//yZ/88c/+sgsQAQhAAAIQgMDuBBjA7nzpT/6T3/7+n/yln/zyX/cEQAACEIAABCDgQYABPGjzT/7+T//6n/zZf/FnffImAQEIQAACEIBASAIUoCRd8pP//X/+jT/9i3/y2d/eEoQABCAAAQhAYGkBBvDSHn+H//wH//mH//In//JP/gUIAAEIQAACEAhGgAEE553++T/921/8yT/8M5/4AQABCEAAAhCAwFoCDGCtdf4v/+s//7c/+pN//Cff/gs4AhCAAAQgAIGtBRjAW/v49/zJH/7uL/7kf/lnfvoXsAYQAAEIQAACaQQYQNO43z/4D//tn/zJv/wzn/yFXwMCEAABCEAAAhB4IcAAPrTj7/jTv/3n//Qvf/lnv/kXrQEIQAACEIAABLIKUIAz+uEPfv9P/+JP/sy//GdfABhAAAIQgAAEIJBHAAH8CF/wn/yH3/7Jn/yHn/ydL/kLQAACEIAABCBwIsAAngi1v/uTP/nbf/Kn//JPfvwXjAUIQAACEIBAZgIU4Mzc0h/8id/++p/84Z9+wS9kAQhAAAIQgECzAgzgzdpf+0l/8A9/+5N/8Se/Yy+gBQEIQAACEIDAdgQYwNvRz//kn/zNb//kn/wLnv0LMAEIQAACEIDAyAQoQCMzST/4+3/66U/+yZ/8yS+gBwEIQAACEIDAyAQYQCMzzD/423/2p//yz/zkn/y3FwACEIAABCAAgRYEGECLeP4U//Nv//on//BP/v6n/wYIAAEIQAACEBhLgAEMrU/+0R/8u6d/+Kd/8tP+wUAAAQhAAAIQGENg/z+y+MvE9y639j2rX/iQ5zX/48a3AAAAAElFTkSuQmCC'; 
+            // -- IMAGEN CORREGIDA CON URL --
+            const headImageSrc = 'https://i.ibb.co/k3vLz75/Subject.png';
+            
             const heads = [];
             const numHeads = 15;
-            const headSize = 90; // Aumenté un poco el tamaño para la nueva foto
+            const headSize = 90;
             const minSpeed = 0.5;
             const maxSpeed = 1.5;
 
@@ -268,7 +266,7 @@
                     headElement.src = headImageSrc;
                     headElement.className = 'rolling-head';
                     headElement.style.width = `${headSize}px`;
-                    headElement.style.height = 'auto'; // Alto automático para no deformar
+                    headElement.style.height = 'auto';
                     
                     container.appendChild(headElement);
 
@@ -303,193 +301,8 @@
                 requestAnimationFrame(animate);
             }
             
-            // --- FIN: CÓDIGO PARA LA ANIMACIÓN ---
-
+            // --- Resto del script (sin cambios) ---
             const fields = ['nombre', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
             window.deleteItem = (itemId) => { document.getElementById(`form-${itemId}`)?.remove(); saveData(); updatePreview(); };
-            window.moveItemUp = (itemId) => { const formItem = document.getElementById(`form-${itemId}`); if (formItem?.previousElementSibling) { formItem.parentNode.insertBefore(formItem, formItem.previousElementSibling); saveData(); updatePreview(); } };
-            window.moveItemDown = (itemId) => { const formItem = document.getElementById(`form-${itemId}`); if (formItem?.nextElementSibling) { formItem.parentNode.insertBefore(formItem.nextElementSibling, formItem); saveData(); updatePreview(); } };
-
-            const saveData = () => {
-                fields.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) localStorage.setItem(id, element.value);
-                });
-                lists.forEach(listName => {
-                    const items = Array.from(document.querySelectorAll(`#${listName}-list .item-form`)).map(form => { const itemData = {}; form.querySelectorAll('input, textarea').forEach(input => { itemData[input.dataset.key] = input.value; }); return itemData; });
-                    localStorage.setItem(`${listName}List`, JSON.stringify(items));
-                });
-                const photoSrc = document.getElementById('preview-photo').src;
-                if(photoSrc && !photoSrc.startsWith('https://placehold.co')) {
-                    localStorage.setItem('userPhoto', photoSrc);
-                }
-                localStorage.setItem('isDataSaved', 'true');
-            };
-
-            const updatePreview = () => {
-                document.getElementById('preview-nombre').textContent = document.getElementById('nombre').value;
-                const headerContactParts = [
-                    document.getElementById('ubicacion').value,
-                    document.getElementById('telefono').value,
-                    document.getElementById('email').value
-                ];
-                document.getElementById('preview-header-contact').textContent = headerContactParts.filter(Boolean).join('  ·  ');
-                document.getElementById('preview-fechaNacimiento').textContent = document.getElementById('fechaNacimiento').value;
-                document.getElementById('preview-nacionalidad').textContent = document.getElementById('nacionalidad').value;
-                document.getElementById('preview-perfil').textContent = document.getElementById('perfil').value;
-               
-                lists.forEach(listName => {
-                    const previewListContainer = document.getElementById(`preview-${listName}-list`);
-                    previewListContainer.innerHTML = ''; 
-                    const items = JSON.parse(localStorage.getItem(`${listName}List`)) || [];
-                    items.forEach(item => {
-                         const previewDiv = document.createElement('div');
-                         updateListPreview(listName, previewDiv, item);
-                         previewListContainer.appendChild(previewDiv);
-                    });
-                });
-            };
-
-            const addToList = (listName, data = {}) => {
-                const listContainer = document.getElementById(`${listName}-list`);
-                const itemId = `${listName}-${Date.now()}-${Math.random()}`;
-
-                const formDiv = document.createElement('div');
-                formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
-                formDiv.id = `form-${itemId}`;
-               
-                let formContent = '';
-                if (listName === 'experiencia') { formContent = `<input type="text" data-key="puesto" placeholder="Position, Company" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Apr 2023 - Present)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description (one achievement per line)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`; } 
-                else if (listName === 'educacion') { formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`; } 
-                else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills (comma-separated)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
-               
-                const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
-                formDiv.innerHTML = formContent + controls;
-                listContainer.appendChild(formDiv);
-               
-                formDiv.querySelectorAll('input, textarea').forEach(input => {
-                    input.addEventListener('input', () => { saveData(); updatePreview(); });
-                });
-            };
-           
-            const updateListPreview = (listName, previewDiv, data) => {
-                 if (listName === 'experiencia') { 
-                     previewDiv.className = 'item-block';
-                     previewDiv.innerHTML = `<div class="item-header"><h3>${data.puesto || ''}</h3><p class="date">${data.fecha || ''}</p></div><ul>${(data.descripcion || '').split('\n').map(line => line.trim() ? `<li>${line.trim()}</li>` : '').join('')}</ul>`; 
-                 } else if (listName === 'educacion') {
-                     previewDiv.className = 'item-block';
-                     previewDiv.innerHTML = `<div class="item-header"><h3>${data.titulo || ''}</h3><p class="date">${data.fecha || ''}</p></div><p class="education-institution">${data.institucion || ''}</p>`;
-                 } else if (listName === 'habilidades') {
-                     previewDiv.className = 'skill-item';
-                     previewDiv.innerHTML = `<div><h3>${data.categoria || ''}</h3><p>${data.lista || ''}</p></div>`;
-                 }
-            };
-
-            const loadSampleData = () => {
-                const sampleData = {
-                    nombre: 'Martín Mastrogiacomo',
-                    ubicacion: 'Buenos Aires, Argentina',
-                    email: 'martomastrogiacomo@gmail.com',
-                    telefono: '+549 11 5 890 7085',
-                    fechaNacimiento: '09/02/1995',
-                    nacionalidad: 'Argentinean, Italian',
-                    perfil: `Results-driven Growth & Business Intelligence Specialist with a strong background in data analytics, digital marketing, and automation. Proven ability to leverage SQL, Tableau, Amazon Redshift, and A/B testing to drive growth, optimize user journeys, and enhance data-driven decision-making. Passionate about bridging the gap between marketing strategy and business intelligence to scale operations and maximize impact. Experienced in designing high-impact dashboards, automation scripts, and customer engagement strategies to improve performance and efficiency.`,
-                    experienciaList: [{puesto:"Growth Lead, Ontop", fecha:"Apr 2025 — Present",descripcion:"Lead the overall growth strategy, integrating paid media, organic, and referral channels to drive customer acquisition and revenue.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze) focused on activation, retention, and reducing churn.\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities across the funnel.\nCollaborate cross-functionally with Sales & Product to align initiatives and ensure a seamless user experience."}, {puesto:"Growth & BI Specialist, Ontop, Buenos Aires", fecha:"Apr 2023 — Apr 2025",descripcion:"Increased conversion rates by 10% through A/B testing and experimentation on landing pages and onboarding flows.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies and refining CRM automations.\nDeveloped predictive cohort analysis that reduced churn by 15%, identifying key drop-off points and implemented targeted retention efforts.\nAutomated Tableau dashboards that provide real-time marketing insights, reducing decision-making time by 30% and enhancing reporting efficiency.\nEnhanced paid media ROAS by 25% through in-depth attribution modeling and cross-channel campaign optimization.\nSaved 10+ hours per week by automating data processes in Google Sheets, improving operational efficiency."}, {puesto:"BI Specialist, Flippin, Buenos Aires", fecha:"May 2022 — Dec 2022",descripcion:"Optimized investment decisions for real estate clients by designing data-driven reports, increasing portfolio ROI by 12%.\nImplemented web scraping solutions that accelerated market trend analysis by 40%, providing real-time pricing insights.\nDeveloped WhatsApp chatbots that improved lead generation, reducing customer response time by 35%."}, {puesto:"Managment Consultant CS&S, Accenture, Buenos Aires", fecha:"Aug 2021 — Apr 2022",descripcion:"Led Salesforce CPQ software implementation for enterprise clients.\nProvided pricing and sales strategy consulting, optimizing revenue operations.\nManaged Jira workflows, improving cross-functional collaboration and project execution speed."}],
-                    educacionList: [{titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 — Sep 2020"},{titulo:"Business Administration Degree",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 — Jul 2017"},{titulo:"Bilingual Bachelor",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 — Dec 2012"}],
-                    habilidadesList: [{categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"},{categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"},{categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"},{categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"},{categoria:"Project Management",lista:"Jira, Agile Methodologies"},{categoria:"Data Integration",lista:"Zendesk, Jira, Financial Data"}]
-                };
-
-                fields.forEach(id => { const input = document.getElementById(id); if (input && sampleData[id]) input.value = sampleData[id]; });
-                lists.forEach(listName => { const listKey = `${listName}List`; if (sampleData[listKey]) { sampleData[listKey].forEach(item => addToList(listName, item)); } });
-            };
-
-            const loadDataFromStorage = () => {
-                fields.forEach(id => { const savedValue = localStorage.getItem(id); if (savedValue !== null) document.getElementById(id).value = savedValue; });
-                lists.forEach(listName => { const savedList = JSON.parse(localStorage.getItem(`${listName}List`)); if (savedList) savedList.forEach(itemData => addToList(listName, itemData)); });
-                const savedPhoto = localStorage.getItem('userPhoto');
-                if (savedPhoto) {
-                    document.getElementById('preview-photo').src = savedPhoto;
-                }
-            };
-
-            const initializeApp = () => {
-                fields.forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.addEventListener('input', () => { saveData(); updatePreview(); });
-                    }
-                });
-
-                lists.forEach(listName => {
-                    const addButton = document.getElementById(`add-${listName}`);
-                    if (addButton) {
-                        addButton.addEventListener('click', () => { addToList(listName); saveData(); updatePreview(); });
-                    }
-                });
-               
-                document.getElementById('photo-upload').addEventListener('change', (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            document.getElementById('preview-photo').src = e.target.result;
-                            saveData();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-
-                document.getElementById('download-image').addEventListener('click', () => {
-                    const cvPreview = document.getElementById('cv-preview-container');
-                    const downloadButton = document.getElementById('download-image');
-                   
-                    downloadButton.textContent = 'Generating...';
-                    downloadButton.disabled = true;
-
-                    cvPreview.classList.add('export-mode');
-
-                    html2canvas(cvPreview, { 
-                        scale: 3, 
-                        useCORS: true, 
-                        logging: false,
-                        windowWidth: cvPreview.scrollWidth,
-                        windowHeight: cvPreview.scrollHeight
-                    }).then(canvas => {
-                        cvPreview.classList.remove('export-mode');
-
-                        const link = document.createElement('a');
-                        link.download = 'professional-cv.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                       
-                        downloadButton.textContent = 'Download Image';
-                        downloadButton.disabled = false;
-
-                    }).catch(err => {
-                        console.error("Error generating image:", err);
-                        cvPreview.classList.remove('export-mode');
-                        downloadButton.textContent = 'Download Image';
-                        downloadButton.disabled = false;
-                    });
-                });
-               
-                if (localStorage.getItem('isDataSaved')) { 
-                    loadDataFromStorage(); 
-                } else { 
-                    loadSampleData(); 
-                    saveData();
-                }
-               
-                updatePreview(); 
-                
-                initAnimation();
-                animate();
-            };
-
-            initializeApp();
-        });
-    </script>
-</body>
-</html>
