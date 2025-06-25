@@ -370,16 +370,6 @@
             };
 
             const initializeApp = () => {
-                if (localStorage.getItem('isDataSaved')) {
-                    loadDataFromStorage();
-                } else {
-                    loadSampleData();
-                }
-
-                // Initial UI update based on loaded data
-                fields.forEach(id => updatePreview(id, document.getElementById(id).value));
-                updateAllVisibilities();
-
                 // Attach event listeners for user interaction
                 fields.forEach(id => {
                     document.getElementById(id).addEventListener('input', (e) => {
@@ -407,11 +397,25 @@
                         controls.forEach(c => c.style.display = 'flex');
                     });
                 });
+                
+                // Decide whether to load from storage or load sample data
+                if (localStorage.getItem('isDataSaved')) {
+                    loadDataFromStorage();
+                } else {
+                    loadSampleData();
+                }
+
+                // Initial UI update based on loaded data
+                fields.forEach(id => updatePreview(id, document.getElementById(id).value));
+                updateAllVisibilities();
+
+                // Save the initial state ONLY if it was the first time (from sample data)
+                if (!localStorage.getItem('isDataSaved')) {
+                    saveData();
+                }
             };
 
             initializeApp();
-            // Save the initial state after everything is loaded
-            saveData();
         });
     </script>
 </body>
