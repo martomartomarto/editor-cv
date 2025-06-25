@@ -1,313 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARTITO'S INTERACTIVE CV EDITOR</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: transparent !important;
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const translations = {
+        en: {
+            ui: { dateOfBirth: "Date of birth", nationality: "Nationality", profile: "Executive Summary", employmentHistory: "Professional Experience", education: "Education", skills: "Skills" },
+            sampleData: { nombre: 'Martín Mastrogiacomo', ubicacion: 'Buenos Aires, Argentina', email: 'martomastrogiacomo@gmail.com', telefono: '+549 11 5 890 7085', linkedin: 'https://www.linkedin.com/in/martin-mastrogiacomo/', fechaNacimiento: '09/02/1995', nacionalidad: 'Argentinean, Italian', perfil: `Results-driven Growth & Business Intelligence Specialist...`, experienciaList: [ {puesto:"Growth Lead, Ontop", fecha:"Apr 2025 — Present",descripcion:"Lead the overall growth strategy..."}, {puesto:"Growth & BI Specialist, Ontop", fecha:"Apr 2023 — Apr 2025",descripcion:"Increased conversion rates by 10%..."}, {puesto:"BI Specialist, Flippin", fecha:"May 2022 — Dec 2022",descripcion:"Optimized investment decisions..."}, {puesto:"Managment Consultant, Accenture", fecha:"Aug 2021 — Apr 2022",descripcion:"Led Salesforce CPQ software implementation..."} ], educacionList: [ {titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 — Sep 2020"}, {titulo:"Business Administration Degree",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 — Jul 2017"}, {titulo:"Bilingual Bachelor",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 — Dec 2012"} ], habilidadesList: [ {categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"}, {categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"}, {categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"}, {categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"} ] }
+        },
+        es: {
+            ui: { dateOfBirth: "Fecha de Nacimiento", nationality: "Nacionalidad", profile: "Perfil", employmentHistory: "Experiencia Laboral", education: "Educación", skills: "Habilidades" },
+            sampleData: { nombre: 'Martín Mastrogiacomo', ubicacion: 'Buenos Aires, Argentina', email: 'martomastrogiacomo@gmail.com', telefono: '+549 11 5 890 7085', linkedin: 'https://www.linkedin.com/in/martin-mastrogiacomo/', fechaNacimiento: '09/02/1995', nacionalidad: 'Argentina, Italiana', perfil: `Especialista en Growth & Business Intelligence orientado a resultados...`, experienciaList: [ {puesto:"Growth Lead, Ontop", fecha:"Abr 2025 — Actualidad",descripcion:"Lidero la estrategia general de crecimiento..."}, {puesto:"Growth & BI Specialist, Ontop", fecha:"Abr 2023 — Abr 2025",descripcion:"Aumenté las tasas de conversión en un 10%..."}, {puesto:"BI Specialist, Flippin", fecha:"May 2022 — Dic 2022",descripcion:"Optimicé decisiones de inversión..."}, {puesto:"Consultor de Gestión, Accenture", fecha:"Ago 2021 — Abr 2022",descripcion:"Lideré la implementación del software Salesforce CPQ..."} ], educacionList: [ {titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Abr 2020 — Sep 2020"}, {titulo:"Licenciatura en Administración de Empresas",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 — Jul 2017"}, {titulo:"Bachiller Bilingüe",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 — Dec 2012"} ], habilidadesList: [ {categoria:"Estrategia de Crecimiento & Analítica",lista:"A/B Testing, Optimización de Funnels, Análisis de Cohortes"}, {categoria:"Inteligencia de Negocio",lista:"Tableau, Power BI, Looker/Data Studio"}, {categoria:"Bases de Datos & SQL",lista:"Amazon Redshift, MySQL"}, {categoria:"Automatización & Scripting",lista:"Google Sheets Scripts, Alteryx"} ] }
         }
-        #background-animation-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1; 
-            background-color: #f3f4f6;
-            overflow: hidden;
-        }
-        .rolling-head {
-            position: absolute;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
-            will-change: transform;
-        }
-        
-        #language-selector {
-            padding: 0.5rem;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            background-color: white;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    };
 
-        #cv-preview-container {
-            width: 100%;
-            padding: 1rem;
-            background: white;
-            color: #1a202c;
-            font-size: 10pt;
-            overflow-x: hidden;
-        }
-        h1#preview-nombre { font-size: 18pt; font-weight: 600; letter-spacing: 1px; }
-        #preview-header-contact { font-size: 8pt; color: #4a5568; margin-top: 0.25rem; }
-        #preview-photo {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid #e2e8f0;
-            flex-shrink: 0;
-        }
-        @media (min-width: 1024px) {
-            #cv-preview-container { width: 21cm; padding: 1.5cm; }
-            h1#preview-nombre { font-size: 24pt; }
-            #preview-header-contact { font-size: 9pt; }
-            #preview-photo { width: 3.5cm; height: 3.5cm; }
-        }
-        
-        #preview-header { 
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-align: left; 
-            margin-bottom: 1rem;
-        }
-        #preview-sub-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.5rem 0;
-            margin-bottom: 1.5rem;
-        }
-        .sub-header-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 0.5rem;
-            font-size: 8pt;
-        }
-        @media (min-width: 1024px) {
-             .sub-header-item { padding: 0 1rem; font-size: 9pt; }
-        }
-        .sub-header-item:not(:last-child) { border-right: 1px solid #e2e8f0; }
-        .sub-header-item-label { font-weight: 600; }
-        .section { margin-bottom: 1.25rem; }
-        h2.section-title {
-            font-size: 10pt;
-            font-weight: 700;
-            color: #4a5568;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 2px;
-            margin-bottom: 0.75rem;
-        }
-        .section-content { padding-top: 0.25rem; }
-        #preview-perfil { font-size: 9.5pt; line-height: 1.6; }
-        .item-block { margin-bottom: 1.25rem; }
-        .item-header {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 0.25rem;
-        }
-        @media (min-width: 640px) {
-            .item-header { flex-direction: row; justify-content: space-between; align-items: baseline; }
-        }
-        .item-header h3 { font-size: 11pt; font-weight: 600; }
-        .item-header .date { font-size: 9pt; color: #718096; white-space: nowrap; }
-        .item-block ul { list-style: disc; padding-left: 1.25rem; margin-top: 0.5rem; }
-        .item-block li { font-size: 8.5pt; line-height: 1.6; margin-bottom: 0.25rem; }
-        .education-institution { font-size: 8.5pt; color: #4a5568; }
-        #preview-habilidades-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-        }
-        @media (min-width: 640px) {
-            #preview-habilidades-list { grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; }
-        }
-        .skill-item h3 { font-size: 9.5pt; font-weight: 600; margin-bottom: 2px; }
-        .skill-item p { font-size: 8.5pt; color: #4a5568; line-height: 1.5; }
-        .item-controls { display: flex; flex-direction: column; gap: 2px; position: absolute; top: 6px; right: 6px; }
-        .control-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background-color: #f3f4f6; border: 1px solid #d1d5db; border-radius: 50%; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        .control-btn:hover { background-color: #e5e7eb; }
-        .control-btn.delete-btn { color: #ef4444; }
-        .control-btn.move-btn { color: #3b82f6; }
-        .export-mode { font-size: 7pt !important; }
-        .export-mode h1#preview-nombre { font-size: 21pt !important; }
-        .export-mode #preview-header-contact, .export-mode #preview-linkedin-container a { font-size: 7pt !important; }
-        .export-mode .sub-header-item { font-size: 7pt !important; }
-        .export-mode h2.section-title { font-size: 8pt !important; }
-        .export-mode #preview-perfil { font-size: 7.5pt !important; }
-        .export-mode .item-header h3 { font-size: 9pt !important; }
-        .export-mode .item-header .date { font-size: 7pt !important; }
-        .export-mode .item-block li { font-size: 7pt !important; }
-        .export-mode .education-institution { font-size: 7pt !important; }
-        .export-mode .skill-item h3 { font-size: 8pt !important; }
-        .export-mode .skill-item p { font-size: 7pt !important; }
-    </style>
-</head>
-<body class="bg-gray-100">
+    const headImageSrc = 'Subject.png';
+    const numHeads = 15;
+    const headSize = 90;
+    const minSpeed = 0.5;
+    const maxSpeed = 1.5;
+    const heads = [];
+    let animationFrameId;
 
-    <div id="background-animation-container"></div>
-
-    <div id="top-bar" class="w-full p-4 flex justify-between items-center bg-white shadow-md lg:bg-transparent lg:shadow-none lg:fixed">
-        <div id="language-selector-container">
-            <select id="language-selector">
-                <option value="en">English</option>
-                <option value="es">Español</option>
-            </select>
-        </div>
-        <div class="download-button-container">
-            <button id="download-image" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 lg:py-3 lg:px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105 text-sm lg:text-base">
-                Download Image
-            </button>
-        </div>
-    </div>
-
-
-    <div class="container mx-auto px-4 pt-24 pb-4 lg:pt-8 lg:px-8" style="background-color: transparent;">
-        <header class="text-center mb-8">
-            <h1 class="text-2xl lg:text-4xl font-bold text-gray-800">MARTITO'S INTERACTIVE CV EDITOR</h1>
-            <p class="text-gray-600 mt-2">Bienvenidos a una nueva obra maestra by martin.</p>
-        </header>
-
-        <div class="flex flex-col lg:flex-row gap-8">
-            <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
-                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Personal Details</h2>
-                    <div class="space-y-4">
-                        <input type="text" id="nombre" placeholder="Full Name" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="ubicacion" placeholder="City, Country" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="email" id="email" placeholder="Email" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="tel" id="telefono" placeholder="Phone" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="linkedin" placeholder="LinkedIn Profile URL" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="fechaNacimiento" placeholder="Date of Birth" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="nacionalidad" placeholder="Nationality" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <label for="photo-upload" class="block text-sm font-medium text-gray-700 mt-4">Profile Photo</label>
-                        <input type="file" id="photo-upload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                    </div>
-                </div>
-                <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Executive Summary</h2>
-                    <textarea id="perfil" placeholder="Describe your professional profile, strengths, and goals..." class="w-full p-2 border rounded-md h-32 focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                <div class="p-4 border border-gray-200 rounded-lg">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Professional Experience</h2>
-                        <button id="add-experiencia" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
-                    </div>
-                    <div id="experiencia-list" class="space-y-4"></div>
-                </div>
-                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Education</h2>
-                        <button id="add-educacion" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
-                    </div>
-                    <div id="educacion-list" class="space-y-4"></div>
-                </div>
-                <div class="p-4 border border-gray-200 rounded-lg">
-                     <div class="flex justify-between items-center mb-4">
-                         <h2 class="text-xl font-bold text-blue-800">Skills</h2>
-                         <button id="add-habilidades" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
-                    </div>
-                    <div id="habilidades-list" class="space-y-4"></div>
-                </div>
-            </div>
-
-            <div class="lg:w-2/3 flex justify-center items-start overflow-auto">
-                 <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
-                     <div class="w-full">
-                         <header id="preview-header">
-                             <img id="preview-photo" src="https://placehold.co/400x400/e2e8f0/e2e8f0?text=+" alt="Profile photo placeholder">
-                             <div>
-                                 <h1 id="preview-nombre"></h1>
-                                 <p id="preview-header-contact"></p>
-                                 <div id="preview-linkedin-container" class="mt-1"></div>
-                             </div>
-                         </header>
-                         <div id="preview-sub-header">
-                             <div class="sub-header-item"><span class="sub-header-item-label" data-translate="dateOfBirth">Date of birth</span><span id="preview-fechaNacimiento"></span></div>
-                             <div class="sub-header-item"><span class="sub-header-item-label" data-translate="nationality">Nationality</span><span id="preview-nacionalidad"></span></div>
-                         </div>
-
-                         <main id="preview-main-content">
-                             <section id="preview-perfil-section" class="section">
-                                 <h2 class="section-title" data-translate="profile">Executive Summary</h2>
-                                 <div id="preview-perfil" class="section-content"></div>
-                             </section>
-                             <section id="preview-experiencia-section" class="section">
-                                 <h2 class="section-title" data-translate="employmentHistory">Professional Experience</h2>
-                                 <div id="preview-experiencia-list" class="section-content"></div>
-                             </section>
-                              <section id="preview-educacion-section" class="section">
-                                 <h2 class="section-title" data-translate="education">Education</h2>
-                                 <div id="preview-educacion-list" class="section-content"></div>
-                             </section>
-                              <section id="preview-habilidades-section" class="section">
-                                 <h2 class="section-title" data-translate="skills">Skills</h2>
-                                 <div id="preview-habilidades-list" class="section-content"></div>
-                             </section>
-                         </main>
-                     </div>
-                 </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const translations = {
-                en: {
-                    ui: { dateOfBirth: "Date of birth", nationality: "Nationality", profile: "Executive Summary", employmentHistory: "Professional Experience", education: "Education", skills: "Skills" },
-                    sampleData: { nombre: 'Martín Mastrogiacomo', ubicacion: 'Buenos Aires, Argentina', email: 'martomastrogiacomo@gmail.com', telefono: '+549 11 5 890 7085', linkedin: 'https://www.linkedin.com/in/martin-mastrogiacomo/', fechaNacimiento: '09/02/1995', nacionalidad: 'Argentinean, Italian', perfil: `Results-driven Growth & Business Intelligence Specialist with a strong background in data analytics, digital marketing, and automation. Proven ability to leverage SQL, Tableau, Amazon Redshift, and A/B testing to drive growth, optimize user journeys, and enhance data-driven decision-making. Passionate about bridging the gap between marketing strategy and business intelligence to scale operations and maximize impact.`, experienciaList: [ {puesto:"Growth Lead, Ontop", fecha:"Apr 2025 — Present",descripcion:"Lead the overall growth strategy, integrating paid media, organic, and referral channels.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze).\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities."}, {puesto:"Growth & BI Specialist, Ontop", fecha:"Apr 2023 — Apr 2025",descripcion:"Increased conversion rates by 10% through A/B testing on landing pages.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies.\nDeveloped predictive cohort analysis that reduced churn by 15%.\nAutomated Tableau dashboards, reducing decision-making time by 30%."}, {puesto:"BI Specialist, Flippin", fecha:"May 2022 — Dec 2022",descripcion:"Optimized investment decisions for real estate clients, increasing portfolio ROI by 12%.\nImplemented web scraping solutions that accelerated market trend analysis by 40%.\nDeveloped WhatsApp chatbots that improved lead generation by 35%."}, {puesto:"Managment Consultant, Accenture", fecha:"Aug 2021 — Apr 2022",descripcion:"Led Salesforce CPQ software implementation for enterprise clients.\nProvided pricing and sales strategy consulting, optimizing revenue operations."} ], educacionList: [ {titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 — Sep 2020"}, {titulo:"Business Administration Degree",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 — Jul 2017"}, {titulo:"Bilingual Bachelor",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 — Dec 2012"} ], habilidadesList: [ {categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"}, {categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"}, {categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"}, {categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"} ] }
-                },
-                es: {
-                    ui: { dateOfBirth: "Fecha de Nacimiento", nationality: "Nacionalidad", profile: "Perfil", employmentHistory: "Experiencia Laboral", education: "Educación", skills: "Habilidades" },
-                    sampleData: { nombre: 'Martín Mastrogiacomo', ubicacion: 'Buenos Aires, Argentina', email: 'martomastrogiacomo@gmail.com', telefono: '+549 11 5 890 7085', linkedin: 'https://www.linkedin.com/in/martin-mastrogiacomo/', fechaNacimiento: '09/02/1995', nacionalidad: 'Argentina, Italiana', perfil: `Especialista en Growth & Business Intelligence orientado a resultados, con una sólida experiencia en análisis de datos, marketing digital y automatización. Capacidad demostrada para utilizar SQL, Tableau, Amazon Redshift y A/B testing para impulsar el crecimiento, optimizar el recorrido del usuario y mejorar la toma de decisiones. Apasionado por unir la estrategia de marketing y la inteligencia de negocio para escalar operaciones y maximizar el impacto.`, experienciaList: [ {puesto:"Growth Lead, Ontop", fecha:"Abr 2025 — Actualidad",descripcion:"Lidero la estrategia general de crecimiento, integrando canales de pago, orgánicos y de referidos.\nDiseño y optimizo campañas de marketing multicanal (Google Ads, LinkedIn Ads, Braze).\nAnalizo datos (SQL, Tableau, Salesforce) para refinar el ICP, segmentar audiencias e identificar oportunidades de crecimiento."}, {puesto:"Growth & BI Specialist, Ontop", fecha:"Abr 2023 — Abr 2025",descripcion:"Aumenté las tasas de conversión en un 10% mediante A/B testing en landing pages.\nIncrementé las tasas de retención en un 15% optimizando estrategias de marketing de ciclo de vida.\nDesarrollé análisis de cohortes predictivos que redujeron el churn en un 15%.\nAutomaticé dashboards en Tableau, reduciendo el tiempo de toma de decisiones en un 30%."}, {puesto:"BI Specialist, Flippin", fecha:"May 2022 — Dic 2022",descripcion:"Optimicé decisiones de inversión para clientes inmobiliarios, aumentando el ROI del portafolio en un 12%.\nImplementé soluciones de web scraping que aceleraron el análisis de mercado en un 40%.\nDesarrollé chatbots de WhatsApp que mejoraron la generación de leads en un 35%."}, {puesto:"Consultor de Gestión, Accenture", fecha:"Ago 2021 — Abr 2022",descripcion:"Lideré la implementación del software Salesforce CPQ para clientes corporativos.\nProporcioné consultoría en precios y estrategia de ventas, optimizando las operaciones de ingresos."} ], educacionList: [ {titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 — Sep 2020"}, {titulo:"Licenciatura en Administración de Empresas",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 — Jul 2017"}, {titulo:"Bachiller Bilingüe",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 — Dec 2012"} ], habilidadesList: [ {categoria:"Estrategia de Crecimiento & Analítica",lista:"A/B Testing, Optimización de Funnels, Análisis de Cohortes"}, {categoria:"Inteligencia de Negocio",lista:"Tableau, Power BI, Looker/Data Studio"}, {categoria:"Bases de Datos & SQL",lista:"Amazon Redshift, MySQL"}, {categoria:"Automatización & Scripting",lista:"Google Sheets Scripts, Alteryx"} ] }
-                }
-            };
-
-            const headImageSrc = 'Subject.png';
-            const heads = [];
-            const numHeads = 15;
-            const headSize = 90;
-            const minSpeed = 0.5;
-            const maxSpeed = 1.5;
-            let animationFrameId;
-
-            function initAnimation(){const container=document.getElementById("background-animation-container");if(!container)return;container.innerHTML="",heads.length=0;for(let e=0;e<numHeads;e++){const t=document.createElement("img");t.src=headImageSrc,t.className="rolling-head",t.style.width=`${headSize}px`,t.style.height="auto",container.appendChild(t),heads.push({element:t,x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),vy:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),rotation:360*Math.random(),rotationSpeed:2*(Math.random()-.5)})}}
-            function animate(){heads.forEach(e=>{e.x+=e.vx,e.y+=e.vy,e.rotation+=e.rotationSpeed,(e.x<0||e.x>window.innerWidth-headSize)&&(e.vx*=-1),(e.y<0||e.y>window.innerHeight-headSize)&&(e.vy*=-1),e.element.style.transform=`translate(${e.x}px, ${e.y}px) rotate(${e.rotation}deg)`}),animationFrameId=requestAnimationFrame(animate)}
-            const fields=["nombre","ubicacion","email","telefono","linkedin","fechaNacimiento","nacionalidad","perfil"],lists=["experiencia","educacion","habilidades"];
-            
-            window.deleteItem=e=>{document.getElementById(`form-${e}`)?.remove(),saveData(),updatePreview()},window.moveItemUp=e=>{const t=document.getElementById(`form-${e}`);t?.previousElementSibling&&t.parentNode.insertBefore(t,t.previousElementSibling),saveData(),updatePreview()},window.moveItemDown=e=>{const t=document.getElementById(`form-${e}`);t?.nextElementSibling&&t.parentNode.insertBefore(t.nextElementSibling,t),saveData(),updatePreview()};
-            const saveData=()=>{fields.forEach(e=>{const t=document.getElementById(e);t&&localStorage.setItem(e,t.value)}),lists.forEach(e=>{const t=Array.from(document.querySelectorAll(`#${e}-list .item-form`)).map(e=>{const t={};return e.querySelectorAll("input, textarea").forEach(e=>{t[e.dataset.key]=e.value}),t});localStorage.setItem(`${e}List`,JSON.stringify(t))});const e=document.getElementById("preview-photo").src;e&&!e.startsWith("https://placehold.co")&&localStorage.setItem("userPhoto",e)};
-            const updatePreview=()=>{document.getElementById("preview-nombre").textContent=document.getElementById("nombre").value;const e=[document.getElementById("ubicacion").value,document.getElementById("telefono").value,document.getElementById("email").value];document.getElementById("preview-header-contact").textContent=e.filter(Boolean).join("  ·  ");const t=document.getElementById("linkedin").value,a=document.getElementById("preview-linkedin-container"),n='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.325 0-1.845.723-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>';t?a.innerHTML=`<a href="${t}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-700 hover:underline flex items-center gap-1.5" style="font-size: 8.5pt;">${n} <span>${t.replace("https://www.","").replace("http://www.","").replace(/\/$/,"")}</span></a>`:a.innerHTML="",document.getElementById("preview-fechaNacimiento").textContent=document.getElementById("fechaNacimiento").value,document.getElementById("preview-nacionalidad").textContent=document.getElementById("nacionalidad").value,document.getElementById("preview-perfil").textContent=document.getElementById("perfil").value,lists.forEach(e=>{const t=document.getElementById(`preview-${e}-list`);t.innerHTML="";const a=JSON.parse(localStorage.getItem(`${e}List`))||[];a.forEach(a=>{const n=document.createElement("div");updateListPreview(e,n,a),t.appendChild(n)})})};
-            
-            const addToList = (listName, data = {}) => {
-                const listContainer = document.getElementById(`${listName}-list`);
-                const itemId = `${listName}-${Date.now()}-${Math.random()}`;
-                const formDiv = document.createElement('div');
-                formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
-                formDiv.id = `form-${itemId}`;
-                let formContent = '';
-                if (listName === 'experiencia') { formContent = `<input type="text" data-key="puesto" placeholder="Position, Company" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="fecha" placeholder="Date" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`; } 
-                else if (listName === 'educacion') { formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`; } 
-                else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
-                const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
-                formDiv.innerHTML = formContent + controls;
-                listContainer.prepend(formDiv); 
-                formDiv.querySelectorAll('input, textarea').forEach(input => {
-                    input.addEventListener('input', () => { saveData(); updatePreview(); });
-                });
-            };
-
-            const updateListPreview=(e,t,a)=>{if("experiencia"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.puesto||""}</h3><p class="date">${a.fecha||""}</p></div><ul>${(a.descripcion||"").split("\n").map(e=>e.trim()?`<li>${e.trim()}</li>`:"").join("")}</ul>`;else if("educacion"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.titulo||""}</h3><p class="date">${a.fecha||""}</p></div><p class="education-institution">${a.institucion||""}</p>`;else if("habilidades"===e){t.className="skill-item",t.innerHTML=`<div><h3>${a.categoria||""}</h3><p>${a.lista||""}</p></div>`}};
-            const loadSampleData=e=>{lists.forEach(e=>{document.getElementById(`${e}-list`).innerHTML=""});const t=translations[e].sampleData;fields.forEach(e=>{const a=document.getElementById(e);a&&void 0!==t[e]&&(a.value=t[e])}),lists.forEach(e=>{const a=e+"List";if(t[a]){const n=t[a].slice().reverse();n.forEach(t=>{addToList(e,t)})}});const a=document.getElementById("preview-photo"),n=localStorage.getItem("userPhoto");a&&(a.src=n||"https://placehold.co/400x400/e2e8f0/e2e8f0?text=+")};
-            const clearSavedData=()=>{fields.forEach(e=>localStorage.removeItem(e)),lists.forEach(e=>localStorage.removeItem(`${e}List`))};
-            const applyTranslations=e=>{const t=translations[e].ui;document.querySelectorAll("[data-translate]").forEach(a=>{const n=a.getAttribute("data-translate");t[n]&&(a.textContent=t[n])}),clearSavedData(),loadSampleData(e),saveData(),updatePreview()};
-            const initializeApp=()=>{fields.forEach(e=>{const t=document.getElementById(e);t&&t.addEventListener("input",()=>{saveData(),updatePreview()})}),lists.forEach(e=>{const t=document.getElementById(`add-${e}`);t&&t.addEventListener("click",()=>{addToList(e),saveData(),updatePreview()})}),document.getElementById("photo-upload").addEventListener("change",e=>{const t=e.target.files[0];if(t){const a=new FileReader;a.onload=e=>{document.getElementById("preview-photo").src=e.target.result,localStorage.setItem("userPhoto",e.target.result)},a.readAsDataURL(t)}}),document.getElementById("download-image").addEventListener("click",()=>{const e=document.getElementById("cv-preview-container"),t=document.getElementById("download-image");t.textContent="Generating...",t.disabled=!0,e.classList.add("export-mode"),html2canvas(e,{scale:3,useCORS:!0,logging:!1,windowWidth:e.scrollWidth,windowHeight:e.scrollHeight}).then(a=>{e.classList.remove("export-mode");const n=document.createElement("a");n.download=`cv-martin-mastrogiacomo-${document.getElementById("language-selector").value}.png`,n.href=a.toDataURL("image/png"),n.click(),t.textContent="Download Image",t.disabled=!1}).catch(a=>{console.error("Error generating image:",a),e.classList.remove("export-mode"),t.textContent="Download Image",t.disabled=!1})});const e=document.getElementById("language-selector");e.addEventListener("change",e=>{applyTranslations(e.target.value)}),applyTranslations("en"),animationFrameId&&cancelAnimationFrame(animationFrameId),initAnimation(),animate()};
-            initializeApp();
+    function initAnimation(){const container=document.getElementById("background-animation-container");if(!container)return;container.innerHTML="",heads.length=0;for(let e=0;e<numHeads;e++){const t=document.createElement("img");t.src=headImageSrc,t.className="rolling-head",t.style.width=`${headSize}px`,t.style.height="auto",container.appendChild(t),heads.push({element:t,x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),vy:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),rotation:360*Math.random(),rotationSpeed:2*(Math.random()-.5)})}}
+    function animate(){heads.forEach(e=>{e.x+=e.vx,e.y+=e.vy,e.rotation+=e.rotationSpeed,(e.x<0||e.x>window.innerWidth-headSize)&&(e.vx*=-1),(e.y<0||e.y>window.innerHeight-headSize)&&(e.vy*=-1),e.element.style.transform=`translate(${e.x}px, ${e.y}px) rotate(${e.rotation}deg)`}),animationFrameId=requestAnimationFrame(animate)}
+    
+    const fields=["nombre","ubicacion","email","telefono","linkedin","fechaNacimiento","nacionalidad","perfil"],lists=["experiencia","educacion","habilidades"];
+    
+    window.deleteItem=e=>{document.getElementById(`form-${e}`)?.remove(),saveData(),updatePreview()},window.moveItemUp=e=>{const t=document.getElementById(`form-${e}`);t?.previousElementSibling&&t.parentNode.insertBefore(t,t.previousElementSibling),saveData(),updatePreview()},window.moveItemDown=e=>{const t=document.getElementById(`form-${e}`);t?.nextElementSibling&&t.parentNode.insertBefore(t.nextElementSibling,t),saveData(),updatePreview()};
+    
+    const saveData=()=>{
+        // Esta bandera nos ayudará a saber que el usuario ya guardó datos.
+        localStorage.setItem('cvEditorHasData', 'true'); 
+        fields.forEach(e=>{const t=document.getElementById(e);t&&localStorage.setItem(e,t.value)}),lists.forEach(e=>{const t=Array.from(document.querySelectorAll(`#${e}-list .item-form`)).map(e=>{const t={};return e.querySelectorAll("input, textarea").forEach(e=>{t[e.dataset.key]=e.value}),t});localStorage.setItem(`${e}List`,JSON.stringify(t))});const e=document.getElementById("preview-photo").src;e&&!e.startsWith("https://placehold.co")&&localStorage.setItem("userPhoto",e)
+    };
+    
+    const updatePreview=()=>{document.getElementById("preview-nombre").textContent=document.getElementById("nombre").value;const e=[document.getElementById("ubicacion").value,document.getElementById("telefono").value,document.getElementById("email").value];document.getElementById("preview-header-contact").textContent=e.filter(Boolean).join("  ·  ");const t=document.getElementById("linkedin").value,a=document.getElementById("preview-linkedin-container"),n='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.325 0-1.845.723-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>';t?a.innerHTML=`<a href="${t}" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-blue-700 hover:underline flex items-center gap-1.5" style="font-size: 8.5pt;">${n} <span>${t.replace("https://www.","").replace("http://www.","").replace(/\/$/,"")}</span></a>`:a.innerHTML="",document.getElementById("preview-fechaNacimiento").textContent=document.getElementById("fechaNacimiento").value,document.getElementById("preview-nacionalidad").textContent=document.getElementById("nacionalidad").value,document.getElementById("preview-perfil").textContent=document.getElementById("perfil").value,lists.forEach(e=>{const t=document.getElementById(`preview-${e}-list`);t.innerHTML="";const a=JSON.parse(localStorage.getItem(`${e}List`))||[];a.forEach(a=>{const n=document.createElement("div");updateListPreview(e,n,a),t.appendChild(n)})})};
+    
+    const addToList = (listName, data = {}) => {
+        const listContainer = document.getElementById(`${listName}-list`);
+        const itemId = `${listName}-${Date.now()}-${Math.random()}`;
+        const formDiv = document.createElement('div');
+        formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
+        formDiv.id = `form-${itemId}`;
+        let formContent = '';
+        if (listName === 'experiencia') { formContent = `<input type="text" data-key="puesto" placeholder="Position, Company" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="fecha" placeholder="Date" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`; } 
+        else if (listName === 'educacion') { formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`; } 
+        else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
+        const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
+        formDiv.innerHTML = formContent + controls;
+        listContainer.appendChild(formDiv); // Usamos appendChild para mantener el orden al cargar
+        formDiv.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', () => { saveData(); updatePreview(); });
         });
-    </script>
-</body>
-</html>
+    };
+
+    const updateListPreview=(e,t,a)=>{if("experiencia"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.puesto||""}</h3><p class="date">${a.fecha||""}</p></div><ul>${(a.descripcion||"").split("\n").map(e=>e.trim()?`<li>${e.trim()}</li>`:"").join("")}</ul>`;else if("educacion"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.titulo||""}</h3><p class="date">${a.fecha||""}</p></div><p class="education-institution">${a.institucion||""}</p>`;else if("habilidades"===e){t.className="skill-item",t.innerHTML=`<div><h3>${a.categoria||""}</h3><p>${a.lista||""}</p></div>`}};
+    
+    // CAMBIO: Esta función carga los datos de la plantilla
+    const loadSampleData=e=>{
+        lists.forEach(e=>{document.getElementById(`${e}-list`).innerHTML=""});
+        const t=translations[e].sampleData;
+        fields.forEach(e=>{const a=document.getElementById(e);a&&void 0!==t[e]&&(a.value=t[e])});
+        lists.forEach(e=>{const a=e+"List";if(t[a]){const n=t[a].slice().reverse();n.forEach(t=>{addToList(e,t)})}});
+        const a=document.getElementById("preview-photo");
+        if(a) a.src="https://placehold.co/400x400/e2e8f0/e2e8f0?text=+";
+    };
+
+    const clearSavedData=()=>{
+        // Ahora también borramos nuestra bandera
+        localStorage.removeItem('cvEditorHasData');
+        fields.forEach(e=>localStorage.removeItem(e));
+        lists.forEach(e=>localStorage.removeItem(`${e}List`));
+        localStorage.removeItem('userPhoto');
+    };
+    
+    const applyTranslations=e=>{
+        const t=translations[e].ui;document.querySelectorAll("[data-translate]").forEach(a=>{const n=a.getAttribute("data-translate");t[n]&&(a.textContent=t[n])});
+        clearSavedData();
+        loadSampleData(e);
+        saveData();
+        updatePreview();
+    };
+
+    // --- ¡NUEVA FUNCIÓN! ---
+    // Esta función decide qué cargar al inicio.
+    const loadDataOnStartup = () => {
+        // Verificamos si nuestra bandera 'cvEditorHasData' existe.
+        if (localStorage.getItem('cvEditorHasData')) {
+            // Si existe, cargamos los datos del usuario.
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                const savedValue = localStorage.getItem(field);
+                if (input && savedValue !== null) {
+                    input.value = savedValue;
+                }
+            });
+
+            lists.forEach(listName => {
+                const savedList = localStorage.getItem(`${listName}List`);
+                if (savedList) {
+                    const items = JSON.parse(savedList);
+                    items.forEach(itemData => addToList(listName, itemData));
+                }
+            });
+            
+            const savedPhoto = localStorage.getItem("userPhoto");
+            if (savedPhoto) {
+                document.getElementById("preview-photo").src = savedPhoto;
+            }
+            
+            updatePreview();
+        } else {
+            // Si no existe, es la primera visita. Cargamos tu plantilla.
+            applyTranslations("en");
+        }
+    };
+
+    const initializeApp=()=>{
+        fields.forEach(e=>{const t=document.getElementById(e);t&&t.addEventListener("input",()=>{saveData(),updatePreview()})}),lists.forEach(e=>{const t=document.getElementById(`add-${e}`);t&&t.addEventListener("click",()=>{addToList(e),saveData(),updatePreview()})}),document.getElementById("photo-upload").addEventListener("change",e=>{const t=e.target.files[0];if(t){const a=new FileReader;a.onload=e=>{document.getElementById("preview-photo").src=e.target.result;saveData();},a.readAsDataURL(t)}}),document.getElementById("download-image").addEventListener("click",()=>{const e=document.getElementById("cv-preview-container"),t=document.getElementById("download-image");t.textContent="Generating...",t.disabled=!0,e.classList.add("export-mode"),html2canvas(e,{scale:3,useCORS:!0,logging:!1,windowWidth:e.scrollWidth,windowHeight:e.scrollHeight}).then(a=>{e.classList.remove("export-mode");const n=document.createElement("a");n.download=`cv-martin-mastrogiacomo-${document.getElementById("language-selector").value}.png`,n.href=a.toDataURL("image/png"),n.click(),t.textContent="Download Image",t.disabled=!1}).catch(a=>{console.error("Error generating image:",a),e.classList.remove("export-mode"),t.textContent="Download Image",t.disabled=!1})});const e=document.getElementById("language-selector");e.addEventListener("change",t=>{applyTranslations(t.target.value)});
+        
+        // --- CAMBIO CLAVE ---
+        // Ya no llamamos a applyTranslations('en').
+        // En su lugar, llamamos a nuestra nueva función de carga inteligente.
+        loadDataOnStartup();
+        
+        // La animación se mantiene igual.
+        animationFrameId&&cancelAnimationFrame(animationFrameId),initAnimation(),animate()
+    };
+    
+    initializeApp();
+});
+</script>
