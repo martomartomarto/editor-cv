@@ -306,3 +306,187 @@
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
             window.deleteItem = (itemId) => { document.getElementById(`form-${itemId}`)?.remove(); saveData(); updatePreview(); };
+            window.moveItemUp = (itemId) => { const formItem = document.getElementById(`form-${itemId}`); if (formItem?.previousElementSibling) { formItem.parentNode.insertBefore(formItem, formItem.previousElementSibling); saveData(); updatePreview(); } };
+            window.moveItemDown = (itemId) => { const formItem = document.getElementById(`form-${itemId}`); if (formItem?.nextElementSibling) { formItem.parentNode.insertBefore(formItem.nextElementSibling, formItem); saveData(); updatePreview(); } };
+
+            const saveData = () => {
+                fields.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) localStorage.setItem(id, element.value);
+                });
+                lists.forEach(listName => {
+                    const items = Array.from(document.querySelectorAll(`#${listName}-list .item-form`)).map(form => { const itemData = {}; form.querySelectorAll('input, textarea').forEach(input => { itemData[input.dataset.key] = input.value; }); return itemData; });
+                    localStorage.setItem(`${listName}List`, JSON.stringify(items));
+                });
+                const photoSrc = document.getElementById('preview-photo').src;
+                if(photoSrc && !photoSrc.startsWith('https://placehold.co')) {
+                    localStorage.setItem('userPhoto', photoSrc);
+                }
+                localStorage.setItem('isDataSaved', 'true');
+            };
+
+            const updatePreview = () => {
+                document.getElementById('preview-nombre').textContent = document.getElementById('nombre').value;
+                const headerContactParts = [
+                    document.getElementById('ubicacion').value,
+                    document.getElementById('telefono').value,
+                    document.getElementById('email').value
+                ];
+                document.getElementById('preview-header-contact').textContent = headerContactParts.filter(Boolean).join('  ·  ');
+                document.getElementById('preview-fechaNacimiento').textContent = document.getElementById('fechaNacimiento').value;
+                document.getElementById('preview-nacionalidad').textContent = document.getElementById('nacionalidad').value;
+                document.getElementById('preview-perfil').textContent = document.getElementById('perfil').value;
+               
+                lists.forEach(listName => {
+                    const previewListContainer = document.getElementById(`preview-${listName}-list`);
+                    previewListContainer.innerHTML = ''; 
+                    const items = JSON.parse(localStorage.getItem(`${listName}List`)) || [];
+                    items.forEach(item => {
+                         const previewDiv = document.createElement('div');
+                         updateListPreview(listName, previewDiv, item);
+                         previewListContainer.appendChild(previewDiv);
+                    });
+                });
+            };
+
+            const addToList = (listName, data = {}) => {
+                const listContainer = document.getElementById(`${listName}-list`);
+                const itemId = `${listName}-${Date.now()}-${Math.random()}`;
+
+                const formDiv = document.createElement('div');
+                formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
+                formDiv.id = `form-${itemId}`;
+               
+                let formContent = '';
+                if (listName === 'experiencia') { formContent = `<input type="text" data-key="puesto" placeholder="Position, Company" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Apr 2023 - Present)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description (one achievement per line)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`; } 
+                else if (listName === 'educacion') { formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`; } 
+                else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills (comma-separated)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
+               
+                const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
+                formDiv.innerHTML = formContent + controls;
+                listContainer.appendChild(formDiv);
+               
+                formDiv.querySelectorAll('input, textarea').forEach(input => {
+                    input.addEventListener('input', () => { saveData(); updatePreview(); });
+                });
+            };
+           
+            const updateListPreview = (listName, previewDiv, data) => {
+                 if (listName === 'experiencia') { 
+                     previewDiv.className = 'item-block';
+                     previewDiv.innerHTML = `<div class="item-header"><h3>${data.puesto || ''}</h3><p class="date">${data.fecha || ''}</p></div><ul>${(data.descripcion || '').split('\n').map(line => line.trim() ? `<li>${line.trim()}</li>` : '').join('')}</ul>`; 
+                 } else if (listName === 'educacion') {
+                     previewDiv.className = 'item-block';
+                     previewDiv.innerHTML = `<div class="item-header"><h3>${data.titulo || ''}</h3><p class="date">${data.fecha || ''}</p></div><p class="education-institution">${data.institucion || ''}</p>`;
+                 } else if (listName === 'habilidades') {
+                     previewDiv.className = 'skill-item';
+                     previewDiv.innerHTML = `<div><h3>${data.categoria || ''}</h3><p>${data.lista || ''}</p></div>`;
+                 }
+            };
+
+            const loadSampleData = () => {
+                const sampleData = {
+                    nombre: 'Martín Mastrogiacomo',
+                    ubicacion: 'Buenos Aires, Argentina',
+                    email: 'martomastrogiacomo@gmail.com',
+                    telefono: '+549 11 5 890 7085',
+                    fechaNacimiento: '09/02/1995',
+                    nacionalidad: 'Argentinean, Italian',
+                    perfil: `Results-driven Growth & Business Intelligence Specialist with a strong background in data analytics, digital marketing, and automation. Proven ability to leverage SQL, Tableau, Amazon Redshift, and A/B testing to drive growth, optimize user journeys, and enhance data-driven decision-making. Passionate about bridging the gap between marketing strategy and business intelligence to scale operations and maximize impact. Experienced in designing high-impact dashboards, automation scripts, and customer engagement strategies to improve performance and efficiency.`,
+                    experienciaList: [{puesto:"Growth Lead, Ontop", fecha:"Apr 2025 — Present",descripcion:"Lead the overall growth strategy, integrating paid media, organic, and referral channels to drive customer acquisition and revenue.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze) focused on activation, retention, and reducing churn.\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities across the funnel.\nCollaborate cross-functionally with Sales & Product to align initiatives and ensure a seamless user experience."}, {puesto:"Growth & BI Specialist, Ontop, Buenos Aires", fecha:"Apr 2023 — Apr 2025",descripcion:"Increased conversion rates by 10% through A/B testing and experimentation on landing pages and onboarding flows.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies and refining CRM automations.\nDeveloped predictive cohort analysis that reduced churn by 15%, identifying key drop-off points and implemented targeted retention efforts.\nAutomated Tableau dashboards that provide real-time marketing insights, reducing decision-making time by 30% and enhancing reporting efficiency.\nEnhanced paid media ROAS by 25% through in-depth attribution modeling and cross-channel campaign optimization.\nSaved 10+ hours per week by automating data processes in Google Sheets, improving operational efficiency."}, {puesto:"BI Specialist, Flippin, Buenos Aires", fecha:"May 2022 — Dec 2022",descripcion:"Optimized investment decisions for real estate clients by designing data-driven reports, increasing portfolio ROI by 12%.\nImplemented web scraping solutions that accelerated market trend analysis by 40%, providing real-time pricing insights.\nDeveloped WhatsApp chatbots that improved lead generation, reducing customer response time by 35%."}, {puesto:"Managment Consultant CS&S, Accenture, Buenos Aires", fecha:"Aug 2021 — Apr 2022",descripcion:"Led Salesforce CPQ software implementation for enterprise clients.\nProvided pricing and sales strategy consulting, optimizing revenue operations.\nManaged Jira workflows, improving cross-functional collaboration and project execution speed."}],
+                    educacionList: [{titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 — Sep 2020"},{titulo:"Business Administration Degree",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 — Jul 2017"},{titulo:"Bilingual Bachelor",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 — Dec 2012"}],
+                    habilidadesList: [{categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"},{categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"},{categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"},{categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"},{categoria:"Project Management",lista:"Jira, Agile Methodologies"},{categoria:"Data Integration",lista:"Zendesk, Jira, Financial Data"}]
+                };
+
+                fields.forEach(id => { const input = document.getElementById(id); if (input && sampleData[id]) input.value = sampleData[id]; });
+                lists.forEach(listName => { const listKey = `${listName}List`; if (sampleData[listKey]) { sampleData[listKey].forEach(item => addToList(listName, item)); } });
+            };
+
+            const loadDataFromStorage = () => {
+                fields.forEach(id => { const savedValue = localStorage.getItem(id); if (savedValue !== null) document.getElementById(id).value = savedValue; });
+                lists.forEach(listName => { const savedList = JSON.parse(localStorage.getItem(`${listName}List`)); if (savedList) savedList.forEach(itemData => addToList(listName, itemData)); });
+                const savedPhoto = localStorage.getItem('userPhoto');
+                if (savedPhoto) {
+                    document.getElementById('preview-photo').src = savedPhoto;
+                }
+            };
+
+            const initializeApp = () => {
+                fields.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.addEventListener('input', () => { saveData(); updatePreview(); });
+                    }
+                });
+
+                lists.forEach(listName => {
+                    const addButton = document.getElementById(`add-${listName}`);
+                    if (addButton) {
+                        addButton.addEventListener('click', () => { addToList(listName); saveData(); updatePreview(); });
+                    }
+                });
+               
+                document.getElementById('photo-upload').addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            document.getElementById('preview-photo').src = e.target.result;
+                            saveData();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                document.getElementById('download-image').addEventListener('click', () => {
+                    const cvPreview = document.getElementById('cv-preview-container');
+                    const downloadButton = document.getElementById('download-image');
+                   
+                    downloadButton.textContent = 'Generating...';
+                    downloadButton.disabled = true;
+
+                    cvPreview.classList.add('export-mode');
+
+                    html2canvas(cvPreview, { 
+                        scale: 3, 
+                        useCORS: true, 
+                        logging: false,
+                        windowWidth: cvPreview.scrollWidth,
+                        windowHeight: cvPreview.scrollHeight
+                    }).then(canvas => {
+                        cvPreview.classList.remove('export-mode');
+
+                        const link = document.createElement('a');
+                        link.download = 'professional-cv.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                       
+                        downloadButton.textContent = 'Download Image';
+                        downloadButton.disabled = false;
+
+                    }).catch(err => {
+                        console.error("Error generating image:", err);
+                        cvPreview.classList.remove('export-mode');
+                        downloadButton.textContent = 'Download Image';
+                        downloadButton.disabled = false;
+                    });
+                });
+               
+                if (localStorage.getItem('isDataSaved')) { 
+                    loadDataFromStorage(); 
+                } else { 
+                    loadSampleData(); 
+                    saveData();
+                }
+               
+                updatePreview(); 
+                
+                initAnimation();
+                animate();
+            };
+
+            initializeApp();
+        });
+    </script>
+</body>
+</html>
