@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MARTITO'S INTERACTIVE CV EDITOR</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -57,7 +59,13 @@
 
         /* General Section Layout */
         .section {
+            display: flex;
+            gap: 1.5rem;
             margin-bottom: 1.25rem;
+        }
+        .section-title-container {
+            flex-basis: 22%;
+            flex-shrink: 0;
         }
         h2.section-title {
             font-size: 10pt;
@@ -70,9 +78,12 @@
             margin-bottom: 0.75rem;
         }
         .section-content {
+            flex-grow: 1;
             padding-top: 0.25rem;
         }
         #preview-perfil {
+            border-left: 1px solid #e2e8f0;
+            padding-left: 1.5rem;
             font-size: 9.5pt;
             line-height: 1.6;
         }
@@ -102,6 +113,8 @@
         
         /* Skills Layout */
         #preview-habilidades-list {
+            border-left: 1px solid #e2e8f0;
+            padding-left: 1.5rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem 1.5rem;
@@ -115,38 +128,22 @@
         .control-btn:hover { background-color: #e5e7eb; }
         .control-btn.delete-btn { color: #ef4444; }
         .control-btn.move-btn { color: #3b82f6; }
-        
-        /* === PRINT STYLES === */
-        @media print {
-            body {
-                -webkit-print-color-adjust: exact; /* Ensures colors are printed */
-                print-color-adjust: exact;
-            }
-            body > *:not(#cv-preview-container) {
-                display: none;
-            }
-            #cv-preview-container {
-                box-shadow: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                font-size: 7pt !important; /* Font size reduced for export */
-                min-height: 0;
-            }
-             h1#preview-nombre { font-size: 21pt !important; }
-            #preview-header-contact { font-size: 7pt !important; }
-            .sub-header-item { font-size: 7pt !important; }
-            h2.section-title { font-size: 8pt !important; }
-            #preview-perfil { font-size: 7.5pt !important; }
-            .item-header h3 { font-size: 9pt !important; }
-            .item-header .date { font-size: 7pt !important; }
-            .item-block li { font-size: 7pt !important; }
-            .education-institution { font-size: 7pt !important; }
-            .skill-item h3 { font-size: 8pt !important; }
-            .skill-item p { font-size: 7pt !important; }
-            .section, .item-block {
-                page-break-inside: avoid;
-            }
+
+        /* Styles for Screenshot only */
+        .export-mode {
+            font-size: 7pt !important;
         }
+        .export-mode h1#preview-nombre { font-size: 21pt !important; }
+        .export-mode #preview-header-contact { font-size: 7pt !important; }
+        .export-mode .sub-header-item { font-size: 7pt !important; }
+        .export-mode h2.section-title { font-size: 8pt !important; }
+        .export-mode #preview-perfil { font-size: 7.5pt !important; }
+        .export-mode .item-header h3 { font-size: 9pt !important; }
+        .export-mode .item-header .date { font-size: 7pt !important; }
+        .export-mode .item-block li { font-size: 7pt !important; }
+        .export-mode .education-institution { font-size: 7pt !important; }
+        .export-mode .skill-item h3 { font-size: 8pt !important; }
+        .export-mode .skill-item p { font-size: 7pt !important; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -158,8 +155,8 @@
         </header>
 
         <div class="fixed top-4 right-4 z-50">
-            <button id="download-pdf" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
-                Download PDF
+            <button id="download-image" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
+                Download Image
             </button>
         </div>
 
@@ -384,8 +381,41 @@
                     }
                 });
 
-                document.getElementById('download-pdf').addEventListener('click', () => {
-                   window.print();
+                document.getElementById('download-image').addEventListener('click', () => {
+                    const cvPreview = document.getElementById('cv-preview-container');
+                    const downloadButton = document.getElementById('download-image');
+                    
+                    downloadButton.textContent = 'Generating...';
+                    downloadButton.disabled = true;
+
+                    // Temporarily apply export styles for screenshot
+                    cvPreview.classList.add('export-mode');
+
+                    html2canvas(cvPreview, { 
+                        scale: 3, 
+                        useCORS: true, 
+                        logging: false,
+                        windowWidth: cvPreview.scrollWidth,
+                        windowHeight: cvPreview.scrollHeight
+                    }).then(canvas => {
+                        // Remove export styles right after screenshot
+                        cvPreview.classList.remove('export-mode');
+
+                        const link = document.createElement('a');
+                        link.download = 'professional-cv.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        
+                        downloadButton.textContent = 'Download Image';
+                        downloadButton.disabled = false;
+
+                    }).catch(err => {
+                        console.error("Error generating image:", err);
+                        // Ensure styles are removed even if there's an error
+                        cvPreview.classList.remove('export-mode');
+                        downloadButton.textContent = 'Download Image';
+                        downloadButton.disabled = false;
+                    });
                 });
                 
                 if (localStorage.getItem('isDataSaved')) { 
@@ -403,4 +433,3 @@
     </script>
 </body>
 </html>
-
