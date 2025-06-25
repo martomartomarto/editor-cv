@@ -292,15 +292,20 @@
                 previewDiv.id = `preview-${itemId}`;
                 previewListContainer.appendChild(previewDiv);
                 
-                const updateFunction = () => {
-                    const itemData = {};
-                    formDiv.querySelectorAll('input, textarea').forEach(i => itemData[i.dataset.key] = i.value);
-                    updateListPreview(listName, previewDiv, itemData);
-                    saveData();
-                };
-
-                formDiv.querySelectorAll('input, textarea').forEach(input => input.addEventListener('input', updateFunction));
-                updateFunction();
+                // Event listener for real-time updates
+                formDiv.querySelectorAll('input, textarea').forEach(input => {
+                    input.addEventListener('input', () => {
+                        const itemData = {};
+                        formDiv.querySelectorAll('input, textarea').forEach(i => itemData[i.dataset.key] = i.value);
+                        updateListPreview(listName, previewDiv, itemData);
+                        saveData();
+                    });
+                });
+                
+                // Initial preview render
+                const initialData = {};
+                formDiv.querySelectorAll('input, textarea').forEach(i => initialData[i.dataset.key] = i.value);
+                updateListPreview(listName, previewDiv, initialData);
             };
             
             const updateListPreview = (listName, previewDiv, data) => {
@@ -328,14 +333,15 @@
                     habilidadesList: [{categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"},{categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"},{categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"},{categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"},{categoria:"Project Management",lista:"Jira, Agile Methodologies"},{categoria:"Data Integration",lista:"Zendesk, Jira, Financial Data"}]
                 };
 
+                // Populate fields
                 fields.forEach(id => {
                     const input = document.getElementById(id);
                     if (input && sampleData[id]) {
                         input.value = sampleData[id];
-                        updatePreview(id, sampleData[id]);
                     }
                 });
 
+                // Populate lists
                 lists.forEach(listName => {
                     document.getElementById(`${listName}-list`).innerHTML = ''; 
                     document.getElementById(`preview-${listName}-list`).innerHTML = '';
@@ -344,8 +350,6 @@
                         sampleData[listKey].forEach(item => addToList(listName, item));
                     }
                 });
-                
-                saveData();
             };
 
             const loadDataFromStorage = () => {
@@ -353,56 +357,61 @@
                     const savedValue = localStorage.getItem(id);
                     if (savedValue !== null) {
                         document.getElementById(id).value = savedValue;
-                        updatePreview(id, savedValue);
                     }
                 });
                 lists.forEach(listName => {
+                    document.getElementById(`${listName}-list`).innerHTML = ''; 
+                    document.getElementById(`preview-${listName}-list`).innerHTML = '';
                     const savedList = JSON.parse(localStorage.getItem(`${listName}List`));
                     if (savedList) {
-                        document.getElementById(`${listName}-list`).innerHTML = ''; 
-                        document.getElementById(`preview-${listName}-list`).innerHTML = '';
                         savedList.forEach(itemData => addToList(listName, itemData))
                     };
                 });
             };
 
-            // --- Initial Load Logic ---
-            if (localStorage.getItem('isDataSaved')) {
-                loadDataFromStorage();
-            } else {
-                loadSampleData();
-            }
-            updateAllVisibilities();
+            const initializeApp = () => {
+                if (localStorage.getItem('isDataSaved')) {
+                    loadDataFromStorage();
+                } else {
+                    loadSampleData();
+                }
 
+                // Initial UI update based on loaded data
+                fields.forEach(id => updatePreview(id, document.getElementById(id).value));
+                updateAllVisibilities();
 
-            // --- Event Listeners ---
-            fields.forEach(id => {
-                document.getElementById(id).addEventListener('input', (e) => {
-                    updatePreview(id, e.target.value);
-                    saveData();
+                // Attach event listeners for user interaction
+                fields.forEach(id => {
+                    document.getElementById(id).addEventListener('input', (e) => {
+                        updatePreview(id, e.target.value);
+                        saveData();
+                    });
                 });
-            });
 
-            document.getElementById('add-experiencia').addEventListener('click', () => addToList('experiencia'));
-            document.getElementById('add-educacion').addEventListener('click', () => addToList('educacion'));
-            document.getElementById('add-habilidad').addEventListener('click', () => addToList('habilidades'));
+                document.getElementById('add-experiencia').addEventListener('click', () => addToList('experiencia'));
+                document.getElementById('add-educacion').addEventListener('click', () => addToList('educacion'));
+                document.getElementById('add-habilidad').addEventListener('click', () => addToList('habilidades'));
 
-            document.getElementById('download-pdf').addEventListener('click', () => {
-                const cvPreview = document.getElementById('cv-preview-container');
-                const controls = document.querySelectorAll('.item-controls');
-                controls.forEach(c => c.style.display = 'none');
-                html2canvas(cvPreview, { scale: 2, useCORS: true, logging: false }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getWidth() / (canvas.width / canvas.height));
-                    pdf.save("professional-cv.pdf");
-                    controls.forEach(c => c.style.display = 'flex');
-                }).catch(err => {
-                    console.error("Error generating PDF:", err);
-                    controls.forEach(c => c.style.display = 'flex');
+                document.getElementById('download-pdf').addEventListener('click', () => {
+                    const cvPreview = document.getElementById('cv-preview-container');
+                    const controls = document.querySelectorAll('.item-controls');
+                    controls.forEach(c => c.style.display = 'none');
+                    html2canvas(cvPreview, { scale: 2, useCORS: true, logging: false }).then(canvas => {
+                        const imgData = canvas.toDataURL('image/png');
+                        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+                        pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getWidth() / (canvas.width / canvas.height));
+                        pdf.save("professional-cv.pdf");
+                        controls.forEach(c => c.style.display = 'flex');
+                    }).catch(err => {
+                        console.error("Error generating PDF:", err);
+                        controls.forEach(c => c.style.display = 'flex');
+                    });
                 });
-            });
+            };
 
+            initializeApp();
+            // Save the initial state after everything is loaded
+            saveData();
         });
     </script>
 </body>
