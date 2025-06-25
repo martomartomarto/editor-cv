@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* --- Tu CSS existente va aquí, no necesita cambios --- */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: transparent !important;
@@ -86,7 +86,7 @@
             font-size: 8pt;
         }
         @media (min-width: 1024px) {
-             .sub-header-item { padding: 0 1rem; font-size: 9pt; }
+            .sub-header-item { padding: 0 1rem; font-size: 9pt; }
         }
         .sub-header-item:not(:last-child) { border-right: 1px solid #e2e8f0; }
         .sub-header-item-label { font-weight: 600; }
@@ -174,83 +174,83 @@
 
         <div class="flex flex-col lg:flex-row gap-8">
             <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
-                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Personal Details</h2>
-                    <div class="space-y-4">
-                        <input type="text" id="nombre" placeholder="Full Name" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="ubicacion" placeholder="City, Country" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="email" id="email" placeholder="Email" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="tel" id="telefono" placeholder="Phone" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="linkedin" placeholder="LinkedIn Profile URL" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="fechaNacimiento" placeholder="Date of Birth" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="nacionalidad" placeholder="Nationality" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <label for="photo-upload" class="block text-sm font-medium text-gray-700 mt-4">Profile Photo</label>
-                        <input type="file" id="photo-upload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-blue-800">Personal Details</h2>
+                        <div class="space-y-4">
+                            <input type="text" id="nombre" placeholder="Full Name" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="ubicacion" placeholder="City, Country" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <input type="email" id="email" placeholder="Email" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <input type="tel" id="telefono" placeholder="Phone" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="linkedin" placeholder="LinkedIn Profile URL" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="fechaNacimiento" placeholder="Date of Birth" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <input type="text" id="nacionalidad" placeholder="Nationality" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                            <label for="photo-upload" class="block text-sm font-medium text-gray-700 mt-4">Profile Photo</label>
+                            <input type="file" id="photo-upload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
                     </div>
-                </div>
-                <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Executive Summary</h2>
-                    <textarea id="perfil" placeholder="Describe your professional profile, strengths, and goals..." class="w-full p-2 border rounded-md h-32 focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                <div class="p-4 border border-gray-200 rounded-lg">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Professional Experience</h2>
-                        <button id="add-experiencia" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <h2 class="text-xl font-bold mb-4 text-blue-800">Executive Summary</h2>
+                        <textarea id="perfil" placeholder="Describe your professional profile, strengths, and goals..." class="w-full p-2 border rounded-md h-32 focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
-                    <div id="experiencia-list" class="space-y-4"></div>
-                </div>
-                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Education</h2>
-                        <button id="add-educacion" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-blue-800">Professional Experience</h2>
+                            <button id="add-experiencia" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
+                        </div>
+                        <div id="experiencia-list" class="space-y-4"></div>
                     </div>
-                    <div id="educacion-list" class="space-y-4"></div>
-                </div>
-                <div class="p-4 border border-gray-200 rounded-lg">
-                     <div class="flex justify-between items-center mb-4">
-                         <h2 class="text-xl font-bold text-blue-800">Skills</h2>
-                         <button id="add-habilidades" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-blue-800">Education</h2>
+                            <button id="add-educacion" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
+                        </div>
+                        <div id="educacion-list" class="space-y-4"></div>
                     </div>
-                    <div id="habilidades-list" class="space-y-4"></div>
-                </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-bold text-blue-800">Skills</h2>
+                                <button id="add-habilidades" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
+                        </div>
+                        <div id="habilidades-list" class="space-y-4"></div>
+                    </div>
             </div>
 
             <div class="lg:w-2/3 flex justify-center items-start overflow-auto">
-                 <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
-                     <div class="w-full">
-                         <header id="preview-header">
-                             <img id="preview-photo" src="https://placehold.co/400x400/e2e8f0/e2e8f0?text=+" alt="Profile photo placeholder">
-                             <div>
-                                 <h1 id="preview-nombre"></h1>
-                                 <p id="preview-header-contact"></p>
-                                 <div id="preview-linkedin-container" class="mt-1"></div>
-                             </div>
-                         </header>
-                         <div id="preview-sub-header">
-                             <div class="sub-header-item"><span class="sub-header-item-label" data-translate="dateOfBirth">Date of birth</span><span id="preview-fechaNacimiento"></span></div>
-                             <div class="sub-header-item"><span class="sub-header-item-label" data-translate="nationality">Nationality</span><span id="preview-nacionalidad"></span></div>
-                         </div>
+                    <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
+                        <div class="w-full">
+                            <header id="preview-header">
+                                <img id="preview-photo" src="Subject.png" alt="Profile photo placeholder">
+                                <div>
+                                    <h1 id="preview-nombre"></h1>
+                                    <p id="preview-header-contact"></p>
+                                    <div id="preview-linkedin-container" class="mt-1"></div>
+                                </div>
+                            </header>
+                            <div id="preview-sub-header">
+                                <div class="sub-header-item"><span class="sub-header-item-label" data-translate="dateOfBirth">Date of birth</span><span id="preview-fechaNacimiento"></span></div>
+                                <div class="sub-header-item"><span class="sub-header-item-label" data-translate="nationality">Nationality</span><span id="preview-nacionalidad"></span></div>
+                            </div>
 
-                         <main id="preview-main-content">
-                             <section id="preview-perfil-section" class="section">
-                                 <h2 class="section-title" data-translate="profile">Executive Summary</h2>
-                                 <div id="preview-perfil" class="section-content"></div>
-                             </section>
-                             <section id="preview-experiencia-section" class="section">
-                                 <h2 class="section-title" data-translate="employmentHistory">Professional Experience</h2>
-                                 <div id="preview-experiencia-list" class="section-content"></div>
-                             </section>
-                              <section id="preview-educacion-section" class="section">
-                                 <h2 class="section-title" data-translate="education">Education</h2>
-                                 <div id="preview-educacion-list" class="section-content"></div>
-                             </section>
-                              <section id="preview-habilidades-section" class="section">
-                                 <h2 class="section-title" data-translate="skills">Skills</h2>
-                                 <div id="preview-habilidades-list" class="section-content"></div>
-                             </section>
-                         </main>
-                     </div>
-                 </div>
+                            <main id="preview-main-content">
+                                <section id="preview-perfil-section" class="section">
+                                    <h2 class="section-title" data-translate="profile">Executive Summary</h2>
+                                    <div id="preview-perfil" class="section-content"></div>
+                                </section>
+                                <section id="preview-experiencia-section" class="section">
+                                    <h2 class="section-title" data-translate="employmentHistory">Professional Experience</h2>
+                                    <div id="preview-experiencia-list" class="section-content"></div>
+                                </section>
+                                <section id="preview-educacion-section" class="section">
+                                    <h2 class="section-title" data-translate="education">Education</h2>
+                                    <div id="preview-educacion-list" class="section-content"></div>
+                                </section>
+                                <section id="preview-habilidades-section" class="section">
+                                    <h2 class="section-title" data-translate="skills">Skills</h2>
+                                    <div id="preview-habilidades-list" class="section-content"></div>
+                                </section>
+                            </main>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -278,6 +278,7 @@
 
             function initAnimation(){const container=document.getElementById("background-animation-container");if(!container)return;container.innerHTML="",heads.length=0;for(let e=0;e<numHeads;e++){const t=document.createElement("img");t.src=headImageSrc,t.className="rolling-head",t.style.width=`${headSize}px`,t.style.height="auto",container.appendChild(t),heads.push({element:t,x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),vy:(Math.random()*(maxSpeed-minSpeed)+minSpeed)*(Math.random()<.5?1:-1),rotation:360*Math.random(),rotationSpeed:2*(Math.random()-.5)})}}
             function animate(){heads.forEach(e=>{e.x+=e.vx,e.y+=e.vy,e.rotation+=e.rotationSpeed,(e.x<0||e.x>window.innerWidth-headSize)&&(e.vx*=-1),(e.y<0||e.y>window.innerHeight-headSize)&&(e.vy*=-1),e.element.style.transform=`translate(${e.x}px, ${e.y}px) rotate(${e.rotation}deg)`}),animationFrameId=requestAnimationFrame(animate)}
+            
             const fields=["nombre","ubicacion","email","telefono","linkedin","fechaNacimiento","nacionalidad","perfil"],lists=["experiencia","educacion","habilidades"];
             
             window.deleteItem=e=>{document.getElementById(`form-${e}`)?.remove(),saveData(),updatePreview()},window.moveItemUp=e=>{const t=document.getElementById(`form-${e}`);t?.previousElementSibling&&t.parentNode.insertBefore(t,t.previousElementSibling),saveData(),updatePreview()},window.moveItemDown=e=>{const t=document.getElementById(`form-${e}`);t?.nextElementSibling&&t.parentNode.insertBefore(t.nextElementSibling,t),saveData(),updatePreview()};
@@ -303,10 +304,74 @@
             };
 
             const updateListPreview=(e,t,a)=>{if("experiencia"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.puesto||""}</h3><p class="date">${a.fecha||""}</p></div><ul>${(a.descripcion||"").split("\n").map(e=>e.trim()?`<li>${e.trim()}</li>`:"").join("")}</ul>`;else if("educacion"===e)t.className="item-block",t.innerHTML=`<div class="item-header"><h3>${a.titulo||""}</h3><p class="date">${a.fecha||""}</p></div><p class="education-institution">${a.institucion||""}</p>`;else if("habilidades"===e){t.className="skill-item",t.innerHTML=`<div><h3>${a.categoria||""}</h3><p>${a.lista||""}</p></div>`}};
-            const loadSampleData=e=>{lists.forEach(e=>{document.getElementById(`${e}-list`).innerHTML=""});const t=translations[e].sampleData;fields.forEach(e=>{const a=document.getElementById(e);a&&void 0!==t[e]&&(a.value=t[e])}),lists.forEach(e=>{const a=e+"List";if(t[a]){const n=t[a].slice().reverse();n.forEach(t=>{addToList(e,t)})}});const a=document.getElementById("preview-photo"),n=localStorage.getItem("userPhoto");a&&(a.src=n||"https://placehold.co/400x400/e2e8f0/e2e8f0?text=+")};
-            const clearSavedData=()=>{fields.forEach(e=>localStorage.removeItem(e)),lists.forEach(e=>localStorage.removeItem(`${e}List`))};
-            const applyTranslations=e=>{const t=translations[e].ui;document.querySelectorAll("[data-translate]").forEach(a=>{const n=a.getAttribute("data-translate");t[n]&&(a.textContent=t[n])}),clearSavedData(),loadSampleData(e),saveData(),updatePreview()};
-            const initializeApp=()=>{fields.forEach(e=>{const t=document.getElementById(e);t&&t.addEventListener("input",()=>{saveData(),updatePreview()})}),lists.forEach(e=>{const t=document.getElementById(`add-${e}`);t&&t.addEventListener("click",()=>{addToList(e),saveData(),updatePreview()})}),document.getElementById("photo-upload").addEventListener("change",e=>{const t=e.target.files[0];if(t){const a=new FileReader;a.onload=e=>{document.getElementById("preview-photo").src=e.target.result,localStorage.setItem("userPhoto",e.target.result)},a.readAsDataURL(t)}}),document.getElementById("download-image").addEventListener("click",()=>{const e=document.getElementById("cv-preview-container"),t=document.getElementById("download-image");t.textContent="Generating...",t.disabled=!0,e.classList.add("export-mode"),html2canvas(e,{scale:3,useCORS:!0,logging:!1,windowWidth:e.scrollWidth,windowHeight:e.scrollHeight}).then(a=>{e.classList.remove("export-mode");const n=document.createElement("a");n.download=`cv-martin-mastrogiacomo-${document.getElementById("language-selector").value}.png`,n.href=a.toDataURL("image/png"),n.click(),t.textContent="Download Image",t.disabled=!1}).catch(a=>{console.error("Error generating image:",a),e.classList.remove("export-mode"),t.textContent="Download Image",t.disabled=!1})});const e=document.getElementById("language-selector");e.addEventListener("change",e=>{applyTranslations(e.target.value)}),applyTranslations("en"),animationFrameId&&cancelAnimationFrame(animationFrameId),initAnimation(),animate()};
+
+            // *** FUNCIÓN MODIFICADA ***
+            const applyTranslations = lang => {
+                const uiTranslations = translations[lang].ui;
+                document.querySelectorAll("[data-translate]").forEach(elem => {
+                    const key = elem.getAttribute("data-translate");
+                    if (uiTranslations[key]) {
+                        elem.textContent = uiTranslations[key];
+                    }
+                });
+            };
+
+            // *** NUEVA FUNCIÓN PARA CARGAR DATOS ***
+            const loadData = () => {
+                // Primero, intenta cargar los datos del usuario desde localStorage
+                let dataExists = false;
+                fields.forEach(field => {
+                    const savedValue = localStorage.getItem(field);
+                    if (savedValue) {
+                        document.getElementById(field).value = savedValue;
+                        dataExists = true;
+                    }
+                });
+                
+                const photoSrc = localStorage.getItem("userPhoto");
+                document.getElementById("preview-photo").src = photoSrc || 'Subject.png';
+
+                lists.forEach(listName => {
+                    const savedList = localStorage.getItem(`${listName}List`);
+                    if (savedList) {
+                        const items = JSON.parse(savedList);
+                        // Cargar en el orden original
+                        items.slice().reverse().forEach(item => addToList(listName, item));
+                        dataExists = true;
+                    }
+                });
+
+                // Si no existe ningún dato, carga los datos de ejemplo del idioma por defecto (inglés)
+                if (!dataExists) {
+                    const sample = translations['en'].sampleData;
+                    fields.forEach(field => {
+                        if(sample[field]) document.getElementById(field).value = sample[field];
+                    });
+                    lists.forEach(listName => {
+                        const listKey = `${listName}List`;
+                        if(sample[listKey]) {
+                            sample[listKey].slice().reverse().forEach(item => addToList(listName, item));
+                        }
+                    });
+                    saveData(); // Guarda los datos de ejemplo en localStorage
+                }
+
+                updatePreview();
+            };
+
+            const initializeApp=()=>{
+                fields.forEach(e=>{const t=document.getElementById(e);t&&t.addEventListener("input",()=>{saveData(),updatePreview()})}),lists.forEach(e=>{const t=document.getElementById(`add-${e}`);t&&t.addEventListener("click",()=>{addToList(e),saveData(),updatePreview()})}),document.getElementById("photo-upload").addEventListener("change",e=>{const t=e.target.files[0];if(t){const a=new FileReader;a.onload=e=>{document.getElementById("preview-photo").src=e.target.result,localStorage.setItem("userPhoto",e.target.result)},a.readAsDataURL(t)}}),document.getElementById("download-image").addEventListener("click",()=>{const e=document.getElementById("cv-preview-container"),t=document.getElementById("download-image");t.textContent="Generating...",t.disabled=!0,e.classList.add("export-mode"),html2canvas(e,{scale:3,useCORS:!0,logging:!1,windowWidth:e.scrollWidth,windowHeight:e.scrollHeight}).then(a=>{e.classList.remove("export-mode");const n=document.createElement("a");n.download=`cv-martin-mastrogiacomo-${document.getElementById("language-selector").value}.png`,n.href=a.toDataURL("image/png"),n.click(),t.textContent="Download Image",t.disabled=!1}).catch(a=>{console.error("Error generating image:",a),e.classList.remove("export-mode"),t.textContent="Download Image",t.disabled=!1})});
+                
+                // *** LÓGICA DE INICIALIZACIÓN MODIFICADA ***
+                const langSelector=document.getElementById("language-selector");
+                langSelector.addEventListener("change", e => { applyTranslations(e.target.value) });
+                
+                loadData(); // Carga los datos existentes o los de ejemplo
+                applyTranslations(langSelector.value); // Aplica la traducción inicial
+                
+                animationFrameId&&cancelAnimationFrame(animationFrameId),initAnimation(),animate();
+            };
+
             initializeApp();
         });
     </script>
