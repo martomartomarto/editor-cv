@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor de CV Interactivo</title>
+    <title>Interactive CV Editor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -53,6 +53,7 @@
         }
         h2.section-title {
             color: #1e40af; /* blue-800 */
+            text-transform: uppercase;
         }
         .item-controls {
             display: flex;
@@ -91,13 +92,13 @@
 
     <div class="container mx-auto p-4 lg:p-8">
         <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800">Editor de Currículum Interactivo</h1>
-            <p class="text-gray-600 mt-2">Completa, organiza y descarga tu CV profesional al instante.</p>
+            <h1 class="text-4xl font-bold text-gray-800">Interactive CV Editor</h1>
+            <p class="text-gray-600 mt-2">Fill, organize, and download your professional CV instantly.</p>
         </header>
 
         <div class="fixed top-4 right-4 z-50">
             <button id="download-pdf" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 transform hover:scale-105">
-                Descargar PDF
+                Download PDF
             </button>
         </div>
 
@@ -106,48 +107,43 @@
             <!-- Columna de edición (Izquierda) -->
             <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
                 
-                <!-- Datos Personales -->
                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Datos Personales</h2>
+                    <h2 class="text-xl font-bold mb-4 text-blue-800">Personal Details</h2>
                     <div class="space-y-4">
-                        <input type="text" id="nombre" placeholder="Nombre y Apellido" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="puesto" placeholder="Puesto Actual o Buscado" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="ubicacion" placeholder="Ciudad, País" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="nombre" placeholder="Full Name" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="puesto" placeholder="Current or Desired Position" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="ubicacion" placeholder="City, Country" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
                         <input type="email" id="email" placeholder="Email" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="tel" id="telefono" placeholder="Teléfono" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="fechaNacimiento" placeholder="Fecha de Nacimiento" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
-                        <input type="text" id="nacionalidad" placeholder="Nacionalidad" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                        <input type="tel" id="telefono" placeholder="Phone" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="fechaNacimiento" placeholder="Date of Birth" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="nacionalidad" placeholder="Nationality" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
 
-                <!-- Perfil Profesional -->
                 <div class="p-4 border border-gray-200 rounded-lg">
-                    <h2 class="text-xl font-bold mb-4 text-blue-800">Perfil Profesional</h2>
-                    <textarea id="perfil" placeholder="Describe tu perfil profesional, tus fortalezas y objetivos..." class="w-full p-2 border rounded-md h-32 focus:ring-2 focus:ring-blue-500"></textarea>
+                    <h2 class="text-xl font-bold mb-4 text-blue-800">Profile</h2>
+                    <textarea id="perfil" placeholder="Describe your professional profile, strengths, and goals..." class="w-full p-2 border rounded-md h-32 focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
 
-                <!-- Experiencia Laboral -->
                 <div class="p-4 border border-gray-200 rounded-lg">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Experiencia Laboral</h2>
+                        <h2 class="text-xl font-bold text-blue-800">Employment History</h2>
                         <button id="add-experiencia" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
                     </div>
                     <div id="experiencia-list" class="space-y-4"></div>
                 </div>
 
-                <!-- Educación -->
                 <div class="p-4 border border-gray-200 rounded-lg">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Educación</h2>
+                        <h2 class="text-xl font-bold text-blue-800">Education</h2>
                         <button id="add-educacion" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
                     </div>
                     <div id="educacion-list" class="space-y-4"></div>
                 </div>
 
-                <!-- Habilidades -->
                 <div class="p-4 border border-gray-200 rounded-lg">
                      <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-blue-800">Habilidades</h2>
+                        <h2 class="text-xl font-bold text-blue-800">Skills</h2>
                         <button id="add-habilidad" class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-600">+</button>
                     </div>
                     <div id="habilidades-list" class="space-y-4"></div>
@@ -158,40 +154,38 @@
             <!-- Columna de previsualización (Derecha) -->
             <div class="lg:w-2/3 flex justify-center items-start">
                  <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
-                    <!-- Contenido del CV se genera aquí -->
                     <header class="text-center pb-6 border-b border-gray-300">
-                        <h1 id="preview-nombre" class="text-4xl font-bold text-gray-800">Martín Mastrogiacomo</h1>
-                        <p id="preview-puesto" class="text-xl text-gray-600 mt-1">Growth & Business Intelligence Specialist</p>
+                        <h1 id="preview-nombre" class="text-4xl font-bold text-gray-800"></h1>
+                        <p id="preview-puesto" class="text-xl text-gray-600 mt-1"></p>
                         <div id="preview-contacto" class="flex justify-center gap-x-6 gap-y-2 mt-4 text-sm text-gray-500 flex-wrap">
-                            <span id="preview-ubicacion-span">Buenos Aires, Argentina</span>
-                            <a id="preview-email-link" href="#" class="hover:text-blue-600">martomastrogiacomo@gmail.com</a>
-                            <span id="preview-telefono-span">+54 9 11 5890 7085</span>
+                            <span id="preview-ubicacion-span"></span>
+                            <a id="preview-email-link" href="#" class="hover:text-blue-600"></a>
+                            <span id="preview-telefono-span"></span>
                         </div>
                          <div id="preview-datos-extra" class="flex justify-center gap-x-6 gap-y-2 mt-2 text-sm text-gray-500 flex-wrap">
-                            <span id="preview-fechaNacimiento-span">09/02/1995</span>
-                            <span id="preview-nacionalidad-span">Argentinean, Italian</span>
+                            <span id="preview-fechaNacimiento-span"></span>
+                            <span id="preview-nacionalidad-span"></span>
                         </div>
                     </header>
 
                     <main class="mt-8">
                         <section id="preview-perfil-section" class="preview-section">
-                            <h2 class="text-2xl font-bold mb-4 section-title">PERFIL</h2>
-                            <p id="preview-perfil" class="text-gray-700 leading-relaxed">
-                            </p>
+                            <h2 class="text-2xl font-bold mb-4 section-title">Profile</h2>
+                            <p id="preview-perfil" class="text-gray-700 leading-relaxed"></p>
                         </section>
 
                         <section id="preview-experiencia-section" class="preview-section">
-                            <h2 class="text-2xl font-bold mb-4 section-title">EXPERIENCIA LABORAL</h2>
+                            <h2 class="text-2xl font-bold mb-4 section-title">Employment History</h2>
                             <div id="preview-experiencia-list" class="space-y-6"></div>
                         </section>
 
                         <section id="preview-educacion-section" class="preview-section">
-                            <h2 class="text-2xl font-bold mb-4 section-title">EDUCACIÓN</h2>
+                            <h2 class="text-2xl font-bold mb-4 section-title">Education</h2>
                             <div id="preview-educacion-list" class="space-y-4"></div>
                         </section>
                         
-                        <section id="preview-habilidades-section">
-                            <h2 class="text-2xl font-bold mb-4 section-title">HABILIDADES</h2>
+                        <section id="preview-habilidades-section" class="preview-section">
+                            <h2 class="text-2xl font-bold mb-4 section-title">Skills</h2>
                             <div id="preview-habilidades-list" class="space-y-4"></div>
                         </section>
                     </main>
@@ -204,94 +198,72 @@
         document.addEventListener('DOMContentLoaded', function() {
             const { jsPDF } = window.jspdf;
 
-            const fields = [
-                'nombre', 'puesto', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'
-            ];
+            const fields = ['nombre', 'puesto', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
-            // --- Funciones de control de items (accesibles globalmente) ---
-            window.deleteItem = function(itemId) {
-                document.getElementById(`form-${itemId}`).remove();
-                document.getElementById(`preview-${itemId}`).remove();
+            window.deleteItem = (itemId) => {
+                document.getElementById(`form-${itemId}`)?.remove();
+                document.getElementById(`preview-${itemId}`)?.remove();
                 saveData();
-            }
+            };
 
-            window.moveItemUp = function(itemId) {
+            window.moveItemUp = (itemId) => {
                 const formItem = document.getElementById(`form-${itemId}`);
-                const previewItem = document.getElementById(`preview-${itemId}`);
-                
-                if (formItem && formItem.previousElementSibling) {
+                if (formItem?.previousElementSibling) {
                     formItem.parentNode.insertBefore(formItem, formItem.previousElementSibling);
+                    const previewItem = document.getElementById(`preview-${itemId}`);
                     previewItem.parentNode.insertBefore(previewItem, previewItem.previousElementSibling);
                     saveData();
                 }
-            }
+            };
 
-            window.moveItemDown = function(itemId) {
+            window.moveItemDown = (itemId) => {
                 const formItem = document.getElementById(`form-${itemId}`);
-                const previewItem = document.getElementById(`preview-${itemId}`);
-
-                if (formItem && formItem.nextElementSibling) {
+                if (formItem?.nextElementSibling) {
                     formItem.parentNode.insertBefore(formItem.nextElementSibling, formItem);
+                    const previewItem = document.getElementById(`preview-${itemId}`);
                     previewItem.parentNode.insertBefore(previewItem.nextElementSibling, previewItem);
                     saveData();
                 }
-            }
+            };
 
-            function loadData() {
-                fields.forEach(id => {
-                    const input = document.getElementById(id);
-                    const savedValue = localStorage.getItem(id);
-                    if (savedValue) {
-                        input.value = savedValue;
-                        updatePreview(id, savedValue);
-                    }
-                });
+            const updateAllVisibilities = () => {
+                const perfilValue = document.getElementById('perfil').value;
+                document.getElementById('preview-perfil-section').style.display = perfilValue.trim() ? 'block' : 'none';
                 lists.forEach(listName => {
-                    const savedList = JSON.parse(localStorage.getItem(`${listName}List`));
-                    if (savedList && savedList.length > 0) {
-                        savedList.forEach(itemData => addToList(listName, itemData));
-                    } else if (!localStorage.getItem('dataLoaded')) {
-                         // Evita recargar datos de ejemplo si el usuario borró todo
-                    }
+                    const hasItems = document.getElementById(`preview-${listName}-list`).hasChildNodes();
+                    document.getElementById(`preview-${listName}-section`).style.display = hasItems ? 'block' : 'none';
                 });
-                
-                if (!localStorage.getItem('dataLoaded')) {
-                    loadSampleData();
-                    localStorage.setItem('dataLoaded', 'true');
-                }
-            }
+            };
 
-            function saveData() {
+            const saveData = () => {
                 fields.forEach(id => localStorage.setItem(id, document.getElementById(id).value));
                 lists.forEach(listName => {
-                    const items = [];
-                    document.querySelectorAll(`#${listName}-list .item-form`).forEach(form => {
+                    const items = Array.from(document.querySelectorAll(`#${listName}-list .item-form`)).map(form => {
                         const itemData = {};
                         form.querySelectorAll('input, textarea').forEach(input => {
                             itemData[input.dataset.key] = input.value;
                         });
-                        items.push(itemData);
+                        return itemData;
                     });
                     localStorage.setItem(`${listName}List`, JSON.stringify(items));
                 });
-            }
+                updateAllVisibilities();
+            };
 
-            function updatePreview(id, value) {
+            const updatePreview = (id, value) => {
                 const previewEl = document.getElementById(`preview-${id}`);
                 const previewSpan = document.getElementById(`preview-${id}-span`);
                 const previewLink = document.getElementById(`preview-${id}-link`);
-
                 if (previewEl) previewEl.textContent = value || '';
                 if (previewSpan) previewSpan.textContent = value || '';
-                if(previewLink) {
+                if (previewLink) {
                     previewLink.textContent = value || '';
                     if (id === 'email') previewLink.href = `mailto:${value}`;
                 }
-                document.getElementById(`preview-perfil-section`).style.display = document.getElementById('perfil').value ? 'block' : 'none';
-            }
-            
-            function addToList(listName, data = {}) {
+            };
+
+            const addToList = (listName, data = {}) => {
                 const listContainer = document.getElementById(`${listName}-list`);
                 const previewListContainer = document.getElementById(`preview-${listName}-list`);
                 const itemId = `${listName}-${Date.now()}-${Math.random()}`;
@@ -302,33 +274,14 @@
                 
                 let formContent = '';
                 if (listName === 'experiencia') {
-                    formContent = `
-                        <input type="text" data-key="puesto" placeholder="Puesto" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}">
-                        <input type="text" data-key="empresa" placeholder="Empresa y Lugar" class="w-full p-1 mb-2 border rounded-md" value="${data.empresa || ''}">
-                        <input type="text" data-key="fecha" placeholder="Fecha (e.g., Abr 2023 - Abr 2025)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}">
-                        <textarea data-key="descripcion" placeholder="Descripción de tareas y logros (un logro por línea)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>
-                    `;
+                    formContent = `<input type="text" data-key="puesto" placeholder="Position" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="empresa" placeholder="Company & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.empresa || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Apr 2023 - Apr 2025)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description of tasks and achievements (one per line)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`;
                 } else if (listName === 'educacion') {
-                    formContent = `
-                        <input type="text" data-key="titulo" placeholder="Título Obtenido" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}">
-                        <input type="text" data-key="institucion" placeholder="Institución y Lugar" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}">
-                        <input type="text" data-key="fecha" placeholder="Fecha (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">
-                    `;
+                    formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`;
                 } else if (listName === 'habilidades') {
-                    formContent = `
-                         <input type="text" data-key="categoria" placeholder="Categoría (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}">
-                         <textarea data-key="lista" placeholder="Habilidades (separadas por coma)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>
-                    `;
+                    formContent = `<input type="text" data-key="categoria" placeholder="Category (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills (comma-separated)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`;
                 }
                 
-                const controls = `
-                    <div class="item-controls">
-                        <button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Mover hacia arriba">&uarr;</button>
-                        <button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Mover hacia abajo">&darr;</button>
-                        <button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Eliminar">&times;</button>
-                    </div>
-                `;
-
+                const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
                 formDiv.innerHTML = formContent + controls;
                 listContainer.appendChild(formDiv);
                 
@@ -343,43 +296,62 @@
                     saveData();
                 };
 
-                formDiv.querySelectorAll('input, textarea').forEach(input => {
-                    input.addEventListener('input', updateFunction);
-                });
+                formDiv.querySelectorAll('input, textarea').forEach(input => input.addEventListener('input', updateFunction));
                 updateFunction();
-            }
+            };
             
-            function updateListPreview(listName, previewDiv, data) {
+            const updateListPreview = (listName, previewDiv, data) => {
                  if (listName === 'experiencia') {
-                    previewDiv.innerHTML = `
-                        <div class="flex justify-between items-start mb-1">
-                            <h3 class="text-lg font-semibold text-gray-800">${data.puesto || ''}</h3>
-                            <p class="text-sm text-gray-500 text-right">${data.fecha || ''}</p>
-                        </div>
-                        <p class="text-md text-gray-600 mb-2">${data.empresa || ''}</p>
-                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                            ${(data.descripcion || '').split('\n').map(line => line.trim() ? `<li>${line.trim()}</li>` : '').join('')}
-                        </ul>`;
+                    previewDiv.innerHTML = `<div class="flex justify-between items-start mb-1"><h3 class="text-lg font-semibold text-gray-800">${data.puesto || ''}</h3><p class="text-sm text-gray-500 text-right">${data.fecha || ''}</p></div><p class="text-md text-gray-600 mb-2">${data.empresa || ''}</p><ul class="list-disc list-inside text-gray-700 space-y-1">${(data.descripcion || '').split('\n').map(line => line.trim() ? `<li>${line.trim()}</li>` : '').join('')}</ul>`;
                 } else if (listName === 'educacion') {
-                    previewDiv.innerHTML = `
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-800">${data.titulo || ''}</h3>
-                                <p class="text-md text-gray-600">${data.institucion || ''}</p>
-                            </div>
-                            <p class="text-sm text-gray-500">${data.fecha || ''}</p>
-                        </div>`;
+                    previewDiv.innerHTML = `<div class="flex justify-between items-center"><div><h3 class="text-lg font-semibold text-gray-800">${data.titulo || ''}</h3><p class="text-md text-gray-600">${data.institucion || ''}</p></div><p class="text-sm text-gray-500">${data.fecha || ''}</p></div>`;
                 } else if (listName === 'habilidades') {
-                     previewDiv.innerHTML = `
-                        <div class="mb-2">
-                            <h4 class="font-semibold text-gray-700 inline">${data.categoria || ''}:</h4>
-                            <p class="text-gray-600 inline"> ${data.lista || ''}</p>
-                        </div>
-                     `;
+                     previewDiv.innerHTML = `<div class="mb-2"><h4 class="font-semibold text-gray-700 inline">${data.categoria || ''}:</h4><p class="text-gray-600 inline"> ${data.lista || ''}</p></div>`;
                 }
-                const hasItems = document.getElementById(`preview-${listName}-list`).hasChildNodes();
-                document.getElementById(`preview-${listName}-section`).style.display = hasItems ? 'block' : 'none';
-            }
+            };
+
+            const loadData = () => {
+                fields.forEach(id => {
+                    const savedValue = localStorage.getItem(id);
+                    if (savedValue !== null) {
+                        document.getElementById(id).value = savedValue;
+                        updatePreview(id, savedValue);
+                    }
+                });
+                lists.forEach(listName => {
+                    const savedList = JSON.parse(localStorage.getItem(`${listName}List`));
+                    if (savedList) savedList.forEach(itemData => addToList(listName, itemData));
+                });
+                if (!localStorage.getItem('dataLoaded')) {
+                    loadSampleData();
+                    localStorage.setItem('dataLoaded', 'true');
+                }
+                updateAllVisibilities();
+            };
+
+            const loadSampleData = () => {
+                const sampleData = {
+                    nombre: 'Martín Mastrogiacomo',
+                    puesto: 'Growth & Business Intelligence Specialist',
+                    ubicacion: 'Buenos Aires, Argentina',
+                    email: 'martomastrogiacomo@gmail.com',
+                    telefono: '+54 9 11 5890 7085',
+                    fechaNacimiento: '09/02/1995',
+                    nacionalidad: 'Argentinean, Italian',
+                    perfil: `Results-driven Growth & Business Intelligence Specialist with a strong background in data analytics, digital marketing, and automation. Proven ability to leverage SQL, Tableau, Amazon Redshift, and A/B testing to drive growth, optimize user journeys, and enhance data-driven decision-making. Passionate about bridging the gap between marketing strategy and business intelligence to scale operations and maximize impact. Experienced in designing high-impact dashboards, automation scripts, and customer engagement strategies to improve performance and efficiency.`,
+                    experienciaList: [{puesto:"Growth Lead",empresa:"Ontop",fecha:"Apr 2025 - Present",descripcion:"Lead the overall growth strategy, integrating paid media, organic, and referral channels to drive customer acquisition and revenue.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze) focused on activation, retention, and reducing churn.\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities across the funnel.\nCollaborate cross-functionally with Sales & Product to align initiatives and ensure a seamless user experience."}, {puesto:"Growth & BI Specialist",empresa:"Ontop, Buenos Aires",fecha:"Apr 2023 - Apr 2025",descripcion:"Increased conversion rates by 10% through A/B testing and experimentation on landing pages and onboarding flows.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies and refining CRM automations.\nDeveloped predictive cohort analysis that reduced churn by 15%, identifying key drop-off points and implemented targeted retention efforts.\nAutomated Tableau dashboards that provide real-time marketing insights, reducing decision-making time by 30% and enhancing reporting efficiency.\nEnhanced paid media ROAS by 25% through in-depth attribution modeling and cross-channel campaign optimization.\nSaved 10+ hours per week by automating data processes in Google Sheets, improving operational efficiency."}, {puesto:"BI Specialist",empresa:"Flippin, Buenos Aires",fecha:"May 2022 - Dec 2022",descripcion:"Optimized investment decisions for real estate clients by designing data-driven reports, increasing portfolio ROI by 12%.\nImplemented web scraping solutions that accelerated market trend analysis by 40%, providing real-time pricing insights.\nDeveloped WhatsApp chatbots that improved lead generation, reducing customer response time by 35%."}, {puesto:"Managment Consultant CS&S",empresa:"Accenture, Buenos Aires",fecha:"Aug 2021 - Apr 2022",descripcion:"Led Salesforce CPQ software implementation for enterprise clients.\nProvided pricing and sales strategy consulting, optimizing revenue operations.\nManaged Jira workflows, improving cross-functional collaboration and project execution speed."}],
+                    educacionList: [{titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 - Sep 2020"},{titulo:"Business Administration Degree",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 - Jul 2017"},{titulo:"Bilingual Bachelor",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 - Dec 2012"}],
+                    habilidadesList: [{categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"},{categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"},{categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"},{categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"},{categoria:"Project Management",lista:"Jira, Agile Methodologies"},{categoria:"Data Integration",lista:"Zendesk, Jira, Financial Data"}]
+                };
+                fields.forEach(id => {
+                    if (sampleData[id]) document.getElementById(id).value = sampleData[id];
+                });
+                lists.forEach(listName => {
+                    const listKey = `${listName}List`;
+                    if (sampleData[listKey]) sampleData[listKey].forEach(item => addToList(listName, item));
+                });
+                saveData();
+            };
 
             document.getElementById('add-experiencia').addEventListener('click', () => addToList('experiencia'));
             document.getElementById('add-educacion').addEventListener('click', () => addToList('educacion'));
@@ -389,75 +361,21 @@
                 const cvPreview = document.getElementById('cv-preview-container');
                 const controls = document.querySelectorAll('.item-controls');
                 controls.forEach(c => c.style.display = 'none');
-                
-                html2canvas(cvPreview, {
-                    scale: 2, useCORS: true, logging: false
-                }).then(canvas => {
+                html2canvas(cvPreview, { scale: 2, useCORS: true, logging: false }).then(canvas => {
                     const imgData = canvas.toDataURL('image/png');
                     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const finalPdfHeight = pdfWidth / (canvas.width / canvas.height);
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, finalPdfHeight);
-                    pdf.save("cv-profesional.pdf");
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getWidth() / (canvas.width / canvas.height));
+                    pdf.save("professional-cv.pdf");
                     controls.forEach(c => c.style.display = 'flex');
                 }).catch(err => {
-                    console.error("Error al generar el PDF:", err);
+                    console.error("Error generating PDF:", err);
                     controls.forEach(c => c.style.display = 'flex');
                 });
             });
-
-            function loadSampleData() {
-                const sampleData = {
-                    nombre: 'Martín Mastrogiacomo',
-                    puesto: 'Growth & Business Intelligence Specialist',
-                    ubicacion: 'Buenos Aires, Argentina',
-                    email: 'martomastrogiacomo@gmail.com',
-                    telefono: '+54 9 11 5890 7085',
-                    fechaNacimiento: '09/02/1995',
-                    nacionalidad: 'Argentinean, Italian',
-                    perfil: `Resultsdriven -Growth & Business Intelligence Specialist with a strong background in data analytics, digital marketing, and automation. Proven ability to leverage SQL, Tableau, Amazon Redshift, and A/B testing to drive growth, optimize user journeys, and enhance data-driven decision-making. Passionate about bridging the gap between marketing strategy and business intelligence to scale operations and maximize impact. Experienced in designing high-impact dashboards, automation scripts, and customer engagement strategies to improve performance and efficiency.`,
-                    experienciaList: [
-                        { puesto: 'Growth Lead', empresa: 'Ontop', fecha: 'Abr 2025 - Presente', descripcion: 'Lead the overall growth strategy, integrating paid media, organic, and referral channels to drive customer acquisition and revenue.\nDesign and optimize multi-channel marketing campaigns (Google Ads, LinkedIn Ads, Braze) focused on activation, retention, and reducing churn.\nAnalyze data (SQL, Tableau, Salesforce) to refine the ICP, segment audiences, and identify growth opportunities across the funnel.\nCollaborate cross-functionally with Sales & Product to align initiatives and ensure a seamless user experience.' },
-                        { puesto: 'Growth & BI Specialist', empresa: 'Ontop, Buenos Aires', fecha: 'Abr 2023 - Abr 2025', descripcion: 'Increased conversion rates by 10% through A/B testing and experimentation on landing pages and onboarding flows.\nBoosted retention rates by 15% by optimizing lifecycle marketing strategies and refining CRM automations.\nDeveloped predictive cohort analysis that reduced churn by 15%, identifying key drop-off points and implemented targeted retention efforts.\nAutomated Tableau dashboards that provide real-time marketing insights, reducing decision-making time by 30% and enhancing reporting efficiency.\nEnhanced paid media ROAS by 25% through in-depth attribution modeling and cross-channel campaign optimization.\nSaved 10+ hours per week by automating data processes in Google Sheets, improving operational efficiency.' },
-                        { puesto: 'BI Specialist', empresa: 'Flippin, Buenos Aires', fecha: 'May 2022 - Dec 2022', descripcion: 'Optimized investment decisions for real estate clients by designing data-driven reports, increasing portfolio ROI by 12%.\nImplemented web scraping solutions that accelerated market trend analysis by 40%, providing real-time pricing insights.\nDeveloped WhatsApp chatbots that improved lead generation, reducing customer response time by 35%.' },
-                        { puesto: 'Managment Consultant CS&S', empresa: 'Accenture, Buenos Aires', fecha: 'Aug 2021 - Apr 2022', descripcion: 'Led Salesforce CPQ software implementation for enterprise clients.\nProvided pricing and sales strategy consulting, optimizing revenue operations.\nManaged Jira workflows, improving cross-functional collaboration and project execution speed.' }
-                    ],
-                    educacionList: [
-                        { titulo: 'Data Analytics', institucion: 'Digital House, Buenos Aires', fecha: 'Abr 2020 - Sep 2020'},
-                        { titulo: 'Business Administration Degree', institucion: 'Universidad de San Andres, Buenos Aires', fecha: 'Jul 2013 - Jul 2017'},
-                        { titulo: 'Bilingual Bachelor', institucion: 'Saint Gregory\'s College, Buenos Aires', fecha: 'Feb 2010 - Dec 2012'}
-                    ],
-                    habilidadesList: [
-                        { categoria: 'Growth Strategy & Analytics', lista: 'A/B Testing, Funnel Optimization, Cohort Analysis'},
-                        { categoria: 'Business Intelligence', lista: 'Tableau, Power BI, Looker/Data Studio'},
-                        { categoria: 'Databases & SQL', lista: 'Amazon Redshift, MySQL'},
-                        { categoria: 'Automation & Scripting', lista: 'Google Sheets Scripts, Alteryx'},
-                        { categoria: 'Project Management', lista: 'Jira, Agile Methodologies'},
-                        { categoria: 'Data Integration', lista: 'Zendesk, Jira, Financial Data'}
-                    ]
-                };
-
-                fields.forEach(id => {
-                    if(sampleData[id]){
-                        document.getElementById(id).value = sampleData[id];
-                        updatePreview(id, sampleData[id]);
-                    }
-                });
-
-                lists.forEach(listName => {
-                    const listKey = `${listName}List`;
-                    if(sampleData[listKey]){
-                        document.getElementById(`${listName}-list`).innerHTML = '';
-                        document.getElementById(`preview-${listName}-list`).innerHTML = '';
-                        sampleData[listKey].forEach(item => addToList(listName, item));
-                    }
-                });
-                
-                saveData();
-            }
 
             loadData();
         });
     </script>
 </body>
 </html>
+
