@@ -10,6 +10,27 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            /* Hacemos el fondo del body transparente para ver la animación */
+            background-color: transparent !important;
+        }
+        /* Contenedor para la animación de fondo */
+        #background-animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Lo ponemos detrás de todo el contenido */
+            background-color: #f3f4f6; /* El color de fondo original del body */
+            overflow: hidden;
+        }
+        .rolling-head {
+            position: absolute;
+            border-radius: 50%; /* Esto crea el efecto de sticker circular */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            object-fit: cover;
+            /* Sugerencia al navegador para optimizar la animación */
+            will-change: transform;
         }
         #cv-preview-container {
             width: 21cm;
@@ -36,7 +57,7 @@
         }
         h1#preview-nombre { font-size: 24pt; font-weight: 600; letter-spacing: 1px; }
         #preview-header-contact { font-size: 9pt; color: #4a5568; margin-top: 0.25rem; }
-        
+       
         /* Sub-Header */
         #preview-sub-header {
             display: grid;
@@ -99,7 +120,7 @@
         .item-block ul { list-style: disc; padding-left: 1.25rem; margin-top: 0.5rem; }
         .item-block li { font-size: 8.5pt; line-height: 1.6; margin-bottom: 0.25rem; }
         .education-institution { font-size: 8.5pt; color: #4a5568; }
-        
+       
         /* Skills Layout */
         #preview-habilidades-list {
             display: grid;
@@ -135,7 +156,9 @@
 </head>
 <body class="bg-gray-100">
 
-    <div class="container mx-auto p-4 lg:p-8">
+    <div id="background-animation-container"></div>
+
+    <div class="container mx-auto p-4 lg:p-8" style="background-color: transparent;">
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800">MARTITO'S INTERACTIVE CV EDITOR</h1>
             <p class="text-gray-600 mt-2">Fill, organize, and download your professional CV instantly.</p>
@@ -148,7 +171,6 @@
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Editor Column (Left) -->
             <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
                 <div class="p-4 border border-gray-200 rounded-lg">
                     <h2 class="text-xl font-bold mb-4 text-blue-800">Personal Details</h2>
@@ -190,7 +212,6 @@
                 </div>
             </div>
 
-            <!-- Preview Column (Right) -->
             <div class="lg:w-2/3 flex justify-center items-start overflow-auto">
                  <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
                     <div class="w-full">
@@ -225,13 +246,69 @@
                             </section>
                         </main>
                     </div>
-                 </div>
+                   </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- INICIO: CÓDIGO NUEVO PARA LA ANIMACIÓN ---
+
+            const headImageSrc = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAOEArwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1VZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A9UooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoooo-'; // Tu imagen en base64
+            const heads = [];
+            const numHeads = 15; // ¡Puedes cambiar este número!
+            const headSize = 80; // Tamaño de las cabezas en px
+            const minSpeed = 0.5;
+            const maxSpeed = 1.5;
+
+            function initAnimation() {
+                const container = document.getElementById('background-animation-container');
+                for (let i = 0; i < numHeads; i++) {
+                    const headElement = document.createElement('img');
+                    headElement.src = headImageSrc;
+                    headElement.className = 'rolling-head';
+                    headElement.style.width = `${headSize}px`;
+                    headElement.style.height = `${headSize}px`;
+                    
+                    container.appendChild(headElement);
+
+                    heads.push({
+                        element: headElement,
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        vx: (Math.random() * (maxSpeed - minSpeed) + minSpeed) * (Math.random() < 0.5 ? 1 : -1),
+                        vy: (Math.random() * (maxSpeed - minSpeed) + minSpeed) * (Math.random() < 0.5 ? 1 : -1),
+                        rotation: Math.random() * 360,
+                        rotationSpeed: (Math.random() - 0.5) * 2,
+                    });
+                }
+            }
+
+            function animate() {
+                heads.forEach(head => {
+                    // Mover
+                    head.x += head.vx;
+                    head.y += head.vy;
+                    head.rotation += head.rotationSpeed;
+
+                    // Rebotar en los bordes
+                    if (head.x < 0 || head.x > window.innerWidth - headSize) {
+                        head.vx *= -1;
+                    }
+                    if (head.y < 0 || head.y > window.innerHeight - headSize) {
+                        head.vy *= -1;
+                    }
+
+                    // Aplicar transformaciones
+                    head.element.style.transform = `translate(${head.x}px, ${head.y}px) rotate(${head.rotation}deg)`;
+                });
+
+                requestAnimationFrame(animate);
+            }
+            
+            // --- FIN: CÓDIGO NUEVO PARA LA ANIMACIÓN ---
+
             const fields = ['nombre', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
@@ -266,7 +343,7 @@
                 document.getElementById('preview-fechaNacimiento').textContent = document.getElementById('fechaNacimiento').value;
                 document.getElementById('preview-nacionalidad').textContent = document.getElementById('nacionalidad').value;
                 document.getElementById('preview-perfil').textContent = document.getElementById('perfil').value;
-                
+               
                 lists.forEach(listName => {
                     const previewListContainer = document.getElementById(`preview-${listName}-list`);
                     previewListContainer.innerHTML = ''; 
@@ -286,21 +363,21 @@
                 const formDiv = document.createElement('div');
                 formDiv.className = 'item-form p-3 border border-gray-200 rounded-md relative pr-10';
                 formDiv.id = `form-${itemId}`;
-                
+               
                 let formContent = '';
                 if (listName === 'experiencia') { formContent = `<input type="text" data-key="puesto" placeholder="Position, Company" class="w-full p-1 mb-2 border rounded-md" value="${data.puesto || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Apr 2023 - Present)" class="w-full p-1 mb-2 border rounded-md" value="${data.fecha || ''}"><textarea data-key="descripcion" placeholder="Description (one achievement per line)" class="w-full p-1 border rounded-md h-24">${data.descripcion || ''}</textarea>`; } 
                 else if (listName === 'educacion') { formContent = `<input type="text" data-key="titulo" placeholder="Degree / Title" class="w-full p-1 mb-2 border rounded-md" value="${data.titulo || ''}"><input type="text" data-key="institucion" placeholder="Institution & Location" class="w-full p-1 mb-2 border rounded-md" value="${data.institucion || ''}"><input type="text" data-key="fecha" placeholder="Date (e.g., Jul 2013 - Jul 2017)" class="w-full p-1 border rounded-md" value="${data.fecha || ''}">`; } 
                 else if (listName === 'habilidades') { formContent = `<input type="text" data-key="categoria" placeholder="Category (e.g., Business Intelligence)" class="w-full p-1 mb-2 border rounded-md" value="${data.categoria || ''}"><textarea data-key="lista" placeholder="Skills (comma-separated)" class="w-full p-1 border rounded-md h-16">${data.lista || ''}</textarea>`; }
-                
+               
                 const controls = `<div class="item-controls"><button onclick="moveItemUp('${itemId}')" class="control-btn move-btn" title="Move up">&uarr;</button><button onclick="moveItemDown('${itemId}')" class="control-btn move-btn" title="Move down">&darr;</button><button onclick="deleteItem('${itemId}')" class="control-btn delete-btn" title="Delete">&times;</button></div>`;
                 formDiv.innerHTML = formContent + controls;
                 listContainer.appendChild(formDiv);
-                
+               
                 formDiv.querySelectorAll('input, textarea').forEach(input => {
                     input.addEventListener('input', () => { saveData(); updatePreview(); });
                 });
             };
-            
+           
             const updateListPreview = (listName, previewDiv, data) => {
                  if (listName === 'experiencia') { 
                      previewDiv.className = 'item-block';
@@ -355,7 +432,7 @@
                         addButton.addEventListener('click', () => { addToList(listName); saveData(); updatePreview(); });
                     }
                 });
-                
+               
                 document.getElementById('photo-upload').addEventListener('change', (event) => {
                     const file = event.target.files[0];
                     if (file) {
@@ -371,7 +448,7 @@
                 document.getElementById('download-image').addEventListener('click', () => {
                     const cvPreview = document.getElementById('cv-preview-container');
                     const downloadButton = document.getElementById('download-image');
-                    
+                   
                     downloadButton.textContent = 'Generating...';
                     downloadButton.disabled = true;
 
@@ -392,7 +469,7 @@
                         link.download = 'professional-cv.png';
                         link.href = canvas.toDataURL('image/png');
                         link.click();
-                        
+                       
                         downloadButton.textContent = 'Download Image';
                         downloadButton.disabled = false;
 
@@ -404,15 +481,19 @@
                         downloadButton.disabled = false;
                     });
                 });
-                
+               
                 if (localStorage.getItem('isDataSaved')) { 
                     loadDataFromStorage(); 
                 } else { 
                     loadSampleData(); 
                     saveData();
                 }
-                
+               
                 updatePreview(); 
+                
+                // Iniciar la animación de las cabezas
+                initAnimation();
+                animate();
             };
 
             initializeApp();
