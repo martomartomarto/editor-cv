@@ -34,7 +34,6 @@
             color: #1a202c;
             font-size: 10pt;
         }
-        /* Header */
         #preview-header { 
             display: flex;
             align-items: center;
@@ -52,8 +51,6 @@
         }
         h1#preview-nombre { font-size: 24pt; font-weight: 600; letter-spacing: 1px; }
         #preview-header-contact { font-size: 9pt; color: #4a5568; margin-top: 0.25rem; }
-       
-        /* Sub-Header */
         #preview-sub-header {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -70,11 +67,7 @@
         }
         .sub-header-item:not(:last-child) { border-right: 1px solid #e2e8f0; }
         .sub-header-item span:first-child { font-weight: 600; }
-
-        /* General Section Layout */
-        .section {
-            margin-bottom: 1.25rem;
-        }
+        .section { margin-bottom: 1.25rem; }
         h2.section-title {
             font-size: 10pt;
             font-weight: 700;
@@ -85,38 +78,20 @@
             padding-bottom: 2px;
             margin-bottom: 0.75rem;
         }
-        .section-content {
-            padding-top: 0.25rem;
-        }
-        #preview-perfil {
-            font-size: 9.5pt;
-            line-height: 1.6;
-        }
-
-        /* Employment History & Education Layout */
-        .item-block {
-            margin-bottom: 1.25rem;
-        }
+        .section-content { padding-top: 0.25rem; }
+        #preview-perfil { font-size: 9.5pt; line-height: 1.6; }
+        .item-block { margin-bottom: 1.25rem; }
         .item-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             margin-bottom: 0.25rem;
         }
-        .item-header h3 {
-            font-size: 11pt;
-            font-weight: 600;
-        }
-        .item-header .date {
-            font-size: 9pt;
-            color: #718096;
-            white-space: nowrap;
-        }
+        .item-header h3 { font-size: 11pt; font-weight: 600; }
+        .item-header .date { font-size: 9pt; color: #718096; white-space: nowrap; }
         .item-block ul { list-style: disc; padding-left: 1.25rem; margin-top: 0.5rem; }
         .item-block li { font-size: 8.5pt; line-height: 1.6; margin-bottom: 0.25rem; }
         .education-institution { font-size: 8.5pt; color: #4a5568; }
-       
-        /* Skills Layout */
         #preview-habilidades-list {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -124,18 +99,12 @@
         }
         .skill-item h3 { font-size: 9.5pt; font-weight: 600; margin-bottom: 2px; }
         .skill-item p { font-size: 8.5pt; color: #4a5568; line-height: 1.5; }
-
-        /* Editor Controls */
         .item-controls { display: flex; flex-direction: column; gap: 2px; position: absolute; top: 6px; right: 6px; }
         .control-btn { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background-color: #f3f4f6; border: 1px solid #d1d5db; border-radius: 50%; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
         .control-btn:hover { background-color: #e5e7eb; }
         .control-btn.delete-btn { color: #ef4444; }
         .control-btn.move-btn { color: #3b82f6; }
-
-        /* Styles for Screenshot only */
-        .export-mode {
-            font-size: 7pt !important;
-        }
+        .export-mode { font-size: 7pt !important; }
         .export-mode h1#preview-nombre { font-size: 21pt !important; }
         .export-mode #preview-header-contact { font-size: 7pt !important; }
         .export-mode .sub-header-item { font-size: 7pt !important; }
@@ -167,7 +136,7 @@
 
         <div class="flex flex-col lg:flex-row gap-8">
             <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
-                <div class="p-4 border border-gray-200 rounded-lg">
+                 <div class="p-4 border border-gray-200 rounded-lg">
                     <h2 class="text-xl font-bold mb-4 text-blue-800">Personal Details</h2>
                     <div class="space-y-4">
                         <input type="text" id="nombre" placeholder="Full Name" class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500">
@@ -209,7 +178,7 @@
 
             <div class="lg:w-2/3 flex justify-center items-start overflow-auto">
                  <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
-                    <div class="w-full">
+                     <div class="w-full">
                         <header id="preview-header">
                             <img id="preview-photo" src="https://placehold.co/400x400/e2e8f0/e2e8f0?text=+" alt="Profile photo placeholder">
                             <div>
@@ -250,8 +219,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- INICIO: CÓDIGO PARA LA ANIMACIÓN ---
 
-            // -- IMAGEN CORREGIDA CON URL --
-            const headImageSrc = 'https://i.ibb.co/k3vLz75/Subject.png';
+            // -- IMAGEN INCRUSTADA Y VERIFICADA --
+            const headImageSrc = 'data:image/png;base64,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wQgAAEIQAACXQQYwC4Sd+0rX//tn//6Na//5a/+5//+tQ+wCEAAAhCAAAQgMFmAAWyyn//pL//un3/7jW/9+lf/+k8f/gsEIAABCEAAArsSYAC7Ku+6+5++/Mt/fve1//bX/92/ffoBBCEAAQhAAAJbE2AAb82c/bTf/v0///Vrb//2v/q///zUth8BCEAAAhCAAATeToAB3M7R/P2b3/79P7/1tS/9tV/91+8YAgEIQAACEIAABGYgwADMiP/z+u/+4j/8+T/++l/87p/+cZgCEIAABCAAAQhMJ8AAmk6f/d3/9S9/+es3fvFXf/1/ftL9LACEAAQgAAEI7FaAAdytvPvhv/+Ln/75r9/6xV9+7ff/Y4iCEAABCEAAAhBITIABNBm5J9+fffkvv/2Nb/y//+hP//e9+SMIQAACEIAABDYgwACe4Nzv6r//29/+6//41Z/99X//z5/zCQIQgAAEIAABfAQYwD789w/+4j//h//y1X/8r3/77D8BAhCAAAQgAIElAgzgiRh39pP/w/+//Mv/8dVf/e2/e8gPCEAAAhCAAAS2IsAAtoJzv6P/+o///R/+6q//7Hf//rO/AAhAAAIQgAAEeAgwgD045z/8T//xd//wV3/1V//+7J8ABCAAAQhAAAKbEWCAN+f/P/6P//5v//VXf/VX//Tffu5nAQhAAAIQgMCkBBhAU7J/4r//h/+/+4uv//J//e8+/TcDAQhAAAIQgECMAgzg2Aj94u/++J/85dd/+au/+j/+1oXfAQIQgAAEIACB4wgwgMc1549/8D//P/yff/3Zf/33zzwKAQhAAAIQgECzAgzgzdpf+/H/+S///Q9/9Zf/5+//5m8AAhCAAAQgAAEIMIAZof/4R//4d3/wV//9X/z+L+9/EQIQgAAEIAABCGwhwABe4n+/+/9//I//+au//j//9//hJ3wCEIAABCAAAQjEI8AACVp+8l//5W//+n/81V//s//5wvcAEIAABCAAAR6wB4A9+u/+P/yT3/zVX/29n/7pE/4BEIAABCAAAQhMIcAAmkL/tB//q3/4e6/98j/+l//2d/0AQgACEIAABCAwjQADWJp+/4n/+J+//5e//s//9T//q/6BQQEIQAACEIAABFoTYACt6Uv//q///h//469+9j//p7/+688/AhCAAAQgAAEITCbAABqV3//z3/zuL//1V//8T//6v/3tC74DEIAABCAAAQjUJ8AAnVp++s//w1/8j7/+7D/8a7/5k7/+FwABCEAAAhCAQLYCFOAstePf+J//49/+4q//+T/8D//5D/3uTwABCEAAAhCAAARGEWAAB/sDf/wPf/7XP/9nv/3Lf/XffP2fPwEIQAACEIAABLIKUIAz+sX/9l//z1//9f/wX//0j3/279/1AQhAAAIQgAAEphFgAEu9/J//7a9+8Zdf//c//8v/9uXf/AUgAAEIQAACEMgSYADP9vP/5V/+8he//ur/81//uV/+6S/6BwQBCEAAAhCAAATaEmAAbdv4X//qf/yP3/z+7/7yT//22c9/AShAAAIQgAAEILALAgyw6/m/++9/87df/Or//n//m//2wT+7gAAIQAACEIBAvgIU4Ly+6n/6t7/5y19+7V/++T/921//2V8AAhCAAAQgAAEIjCLAAA72A//yv//lr/71X//3/+b//m//0O98AhCAAAQgAAEI5BVAACfrxf/lb3/3q1/+4l//u7/9xV/+AhCAAAQgAAEIQKARAQZwoB/+V//wv/z13/+5f/9vf/4X/A4gAAEIQAACEMgpQACP9Av/5S//6l/+2//6X/7Xf/3X/8YnAAEIQAACEIDALgQYYNcP/J//y3/xl7/+D//9v//+X/4fEIAABCAAAQhkkQIM8Fh/+V/9+V/++q/f/+n//j/9t7/+KzABCEAAAhCAAAR2IsAAdoLgf/zXP//lX/76L//7f//LX//1X/wLQAACEIAABCDQI8AC6P2B//ivf/3f//L3f/lv/u1LfwAIQAACEIAABHoIUIB6A/yvf/Xv/uqXv/pv//q///VX/wIQAACEIAABCEBgBQEG8AL+///v//lf//qvf/4P//Wv/+4vfgEICEAAAhCAQAYBClCAD//LX/6P//yX//q//N3//l/8ChCAAAQgAAEIQKAbAQbQ7fi+/p+//pff/vn/8N//+//wS78DCEAAAhCAQAYBCvAwn/ytL3/xy1/+o//lv/qXP/lLAIAABCAAAQhAYNUCFOA7+/1v//l//esf/t3//n/+S7/+K0gCEIAABCAAgW0IUIC34O9/+ev//j/+8O/++3//m1/4CUAAAhCAAAQgkE2AATxbF/63f/rLV3/wD//1//7rX/8LYAQIQAACEIAABHoQUIC9/oP/+e9++csf/tvf/n+e/gWgAAEIQAACEIBAFgEGcGx84V/+zW9/8Qf/+v//d3/zK3wCCUAAAhCAAAQyClCAM/jFv/rNf/jDv/j+//b//oWvAAEIAABCAAAQ6ECAAeyP3/+X3/zmD/7DP//3X//sXzACEIAABCAAAQjkFKAA5/iLX/32P/yDX/73n/z1H/8LZAQIQAACEIAABJoTYABN2/jffvbLX/zBH/ydn/ydn/4FEIAABCAAAQjEIcAADg0v/8s3f/H73//H//bXv/kLIAEIQAACEIBAxAIU4BgnFf/9r/7g13/wH//7v//FLwABCEAAAhCAQBcCDGAXhP3f/9vf/P6P//pP/ubP/wLRAAIQgAAEIAABCvBw+/1v/uBXP/jHf/s7f/YXeAIQgAAEIAABCMRHgAGMzy9/85d/8wf/+k/+yS/8CkwAAhCAAAQgkFGAAfQY9l/91d//5Q//6T//T3/9K0gCEIAABCAAgf0JMIAdyftf//pX//aHv/rP/u6Xf/0XgAAIQAACEIDARgUYwBv7hH/y93/xhz/4jz/5xS/9AiQAAQhAAAIQGEeAATwmP/8ff/h3f/+Hv/k7P/2bvQIQgAAEIAABCKQSYACNymf/+1/94X/83T/4x1/4C1wBCEAAAhCAAASGEGAADYl+4z//+D/+5Q//+S/9pS/0CSAAAhCAAAQgMJUAA2hqbv+P//Bv//pP/uKP//jHf/sXQAIEIAABCEAAAksEGMBLcnz/H//wH/717//in/z9n/kFIAABCEAAAhAYVoABPCy8/0f/8L//+T/8x3/6q/+ABCAAAQhAAAIQaEmAAbSkB/wjf/j7P/gPf/F3/uzPXwAIQAACEIAABGYT4O5mMv/kf/+Hv//rP/inf/+nvP1XgAAIQAACEIDATgUYwM788Pf/8L//9z/4jz/9i3++C0AAAhCAAAQgkEGAAXSY8p/8w//9uz/8x3/8p7/qBwEBCUAAAhCAwHICDOBlOdx/8D//T//9D//0X/zJnwABEIAABCAAAQisS4ABvK4X/Bf/8N/+/T/8k3/x5/26EwEIQAACEIBAKwIUoFUsfPkn//Bf/vsf/tk//9nf3iJIAAIQgAAEILALAgyw6+5//o9++w//yZ/88c/+sgsQAQhAAAIQgMDuBBjA7nzpT/6T3/7+n/yln/zyX/cEQAACEIAABCDgQYABPGjzT/7+T//6n/zZf/FnffImAQEIQAACEIBASAIUoCRd8pP//X/+jT/9i3/y2d/eEoQABCAAAQhAYGkBBvDSHn+H//wH//mH//In//JP/gUIAAEIQAACEAhGgAEE553++T/921/8yT/8M5/4AQABCEAAAhCAwFoCDGCtdf4v/+s//7c/+pN//Cff/gs4AhCAAAQgAIGtBRjAW/v49/zJH/7uL/7kf/lnfvoXsAYQAAEIQAACaQQYQNO43z/4D//tn/zJv/wzn/yFXwMCEAABCEAAAhB4IcAAPrTj7/jTv/3n//Qvf/lnv/kXrQEIQAACEIAABLIKUIAz+uEPfv9P/+JP/sy//GdfABhAAAIQgAAEIJBHAAH8CF/wn/yH3/7Jn/yHn/ydL/kLQAACEIAABCBwIsAAngi1v/uTP/nbf/Kn//JPfvwXjAUIQAACEIBAZgIU4Mzc0h/8id/++p/84Z9+wS9kAQhAAAIQgECzAgzgzdpf+0l/8A9/+5N/8Se/Yy+gBQEIQAACEIDAdgQYwNvRz//kn/zNb//kn/wLnv0LMAEIQAACEIDAyAQoQCMzST/4+3/66U/+yZ/8yS+gBwEIQAACEIDAyAQYQCMzzD/423/2p//yz/zkn/y3FwACEIAABCAAgRYEGECLeP4U//Nv//on//BP/v6n/wYIAAEIQAACEBhLgAEMrU/+0R/8u6d/+Kd/8tP+wUAAAQhAAAIQGENg/z+y+MvE9y639j2rX/iQ5zX/48a3AAAAAElFTkSuQmCC';
             
             const heads = [];
             const numHeads = 15;
@@ -301,7 +270,7 @@
                 requestAnimationFrame(animate);
             }
             
-            // --- Resto del script (sin cambios) ---
+            // --- Resto del script ---
             const fields = ['nombre', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
