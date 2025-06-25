@@ -104,7 +104,7 @@
 
         <div class="flex flex-col lg:flex-row gap-8">
 
-            <!-- Columna de edición (Izquierda) -->
+            <!-- Editor Column (Left) -->
             <div id="editor-column" class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md space-y-6 overflow-y-auto" style="max-height: 80vh;">
                 
                 <div class="p-4 border border-gray-200 rounded-lg">
@@ -151,7 +151,7 @@
 
             </div>
 
-            <!-- Columna de previsualización (Derecha) -->
+            <!-- Preview Column (Right) -->
             <div class="lg:w-2/3 flex justify-center items-start">
                  <div id="cv-preview-container" class="bg-white rounded-lg shadow-xl">
                     <header class="text-center pb-6 border-b border-gray-300">
@@ -201,6 +201,7 @@
             const fields = ['nombre', 'puesto', 'ubicacion', 'email', 'telefono', 'fechaNacimiento', 'nacionalidad', 'perfil'];
             const lists = ['experiencia', 'educacion', 'habilidades'];
 
+            // --- Global Item Control Functions ---
             window.deleteItem = (itemId) => {
                 document.getElementById(`form-${itemId}`)?.remove();
                 document.getElementById(`preview-${itemId}`)?.remove();
@@ -227,6 +228,7 @@
                 }
             };
 
+            // --- Core Functions ---
             const updateAllVisibilities = () => {
                 const perfilValue = document.getElementById('perfil').value;
                 document.getElementById('preview-perfil-section').style.display = perfilValue.trim() ? 'block' : 'none';
@@ -248,6 +250,7 @@
                     });
                     localStorage.setItem(`${listName}List`, JSON.stringify(items));
                 });
+                localStorage.setItem('isDataSaved', 'true');
                 updateAllVisibilities();
             };
 
@@ -310,25 +313,6 @@
                 }
             };
 
-            const loadData = () => {
-                fields.forEach(id => {
-                    const savedValue = localStorage.getItem(id);
-                    if (savedValue !== null) {
-                        document.getElementById(id).value = savedValue;
-                        updatePreview(id, savedValue);
-                    }
-                });
-                lists.forEach(listName => {
-                    const savedList = JSON.parse(localStorage.getItem(`${listName}List`));
-                    if (savedList) savedList.forEach(itemData => addToList(listName, itemData));
-                });
-                if (!localStorage.getItem('dataLoaded')) {
-                    loadSampleData();
-                    localStorage.setItem('dataLoaded', 'true');
-                }
-                updateAllVisibilities();
-            };
-
             const loadSampleData = () => {
                 const sampleData = {
                     nombre: 'Martín Mastrogiacomo',
@@ -343,15 +327,61 @@
                     educacionList: [{titulo:"Data Analytics",institucion:"Digital House, Buenos Aires",fecha:"Apr 2020 - Sep 2020"},{titulo:"Business Administration Degree",institucion:"Universidad de San Andres, Buenos Aires",fecha:"Jul 2013 - Jul 2017"},{titulo:"Bilingual Bachelor",institucion:"Saint Gregory's College, Buenos Aires",fecha:"Feb 2010 - Dec 2012"}],
                     habilidadesList: [{categoria:"Growth Strategy & Analytics",lista:"A/B Testing, Funnel Optimization, Cohort Analysis"},{categoria:"Business Intelligence",lista:"Tableau, Power BI, Looker/Data Studio"},{categoria:"Databases & SQL",lista:"Amazon Redshift, MySQL"},{categoria:"Automation & Scripting",lista:"Google Sheets Scripts, Alteryx"},{categoria:"Project Management",lista:"Jira, Agile Methodologies"},{categoria:"Data Integration",lista:"Zendesk, Jira, Financial Data"}]
                 };
+
                 fields.forEach(id => {
-                    if (sampleData[id]) document.getElementById(id).value = sampleData[id];
+                    const input = document.getElementById(id);
+                    if (input && sampleData[id]) {
+                        input.value = sampleData[id];
+                        updatePreview(id, sampleData[id]); // FIX: Update preview when loading sample data
+                    }
                 });
+
                 lists.forEach(listName => {
+                    document.getElementById(`${listName}-list`).innerHTML = ''; 
+                    document.getElementById(`preview-${listName}-list`).innerHTML = '';
                     const listKey = `${listName}List`;
-                    if (sampleData[listKey]) sampleData[listKey].forEach(item => addToList(listName, item));
+                    if (sampleData[listKey]) {
+                        sampleData[listKey].forEach(item => addToList(listName, item));
+                    }
                 });
+                
                 saveData();
             };
+
+            const loadDataFromStorage = () => {
+                fields.forEach(id => {
+                    const savedValue = localStorage.getItem(id);
+                    if (savedValue !== null) {
+                        document.getElementById(id).value = savedValue;
+                        updatePreview(id, savedValue);
+                    }
+                });
+                lists.forEach(listName => {
+                    const savedList = JSON.parse(localStorage.getItem(`${listName}List`));
+                    if (savedList) {
+                        document.getElementById(`${listName}-list`).innerHTML = ''; 
+                        document.getElementById(`preview-${listName}-list`).innerHTML = '';
+                        savedList.forEach(itemData => addToList(listName, itemData))
+                    };
+                });
+            };
+
+            // --- Initial Load Logic ---
+            if (localStorage.getItem('isDataSaved')) {
+                loadDataFromStorage();
+            } else {
+                loadSampleData();
+            }
+            updateAllVisibilities();
+
+
+            // --- Event Listeners ---
+            fields.forEach(id => {
+                document.getElementById(id).addEventListener('input', (e) => {
+                    updatePreview(id, e.target.value);
+                    saveData();
+                });
+            });
 
             document.getElementById('add-experiencia').addEventListener('click', () => addToList('experiencia'));
             document.getElementById('add-educacion').addEventListener('click', () => addToList('educacion'));
@@ -373,9 +403,7 @@
                 });
             });
 
-            loadData();
         });
     </script>
 </body>
 </html>
-
